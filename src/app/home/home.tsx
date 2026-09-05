@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
-import React from 'react'
+import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import React, { useState } from 'react'
 
 function Percentage(value: number) {
   if (value >= 75) {
@@ -12,52 +12,35 @@ function Percentage(value: number) {
 }
 
 export default function Home() {
+  const [cards, setCards] = useState([
+    { id: 1, title: 'MANAGERIAL ECONOMICS', attendance: 100 },
+    { id: 2, title: 'MARKETING MANAGEMENT', attendance: 100 },
+    { id: 3, title: 'FINANCIAL ACCOUNTING', attendance: 100 },
+    { id: 4, title: 'ORGANIZATIONAL BEHAVIOUR', attendance: 45 },
+    { id: 5, title: 'DATA ANALYSIS IN EXCEL', attendance: 100 },
+    { id: 6, title: 'PYTHON FOR DATA ANALYTICS', attendance: 74 },
+  ]);
+  
   return (
     <View style={styles.container}>
       <View style={styles.cardContainer}>
 
-        <View style={styles.card}>
-          <View style={{flexDirection: 'row', gap: 10}}>
-            <Text style={[styles.cardTitle, {backgroundColor: Percentage(100)}]}>100%</Text>
-            <Text style={styles.cardContent}>MANAGERIAL ECONOMICS</Text>
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <View style={{flexDirection: 'row', gap: 10}}>
-            <Text style={[styles.cardTitle, {backgroundColor: Percentage(100)}]}>100%</Text>
-            <Text style={styles.cardContent}>MARKETING MANAGEMENT</Text>
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <View style={{flexDirection: 'row', gap: 10}}>
-            <Text style={[styles.cardTitle, {backgroundColor: Percentage(100)}]}>100%</Text>
-            <Text style={styles.cardContent}>FINANCIAL ACCOUNTING</Text>
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <View style={{flexDirection: 'row', gap: 10}}>
-            <Text style={[styles.cardTitle, {backgroundColor: Percentage(95)}]}>95%</Text>
-            <Text style={styles.cardContent}>ORGANIZATIONAL BEHAVIOUR</Text>
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <View style={{flexDirection: 'row', gap: 10}}>
-            <Text style={[styles.cardTitle, {backgroundColor: Percentage(100)}]}>100%</Text>
-            <Text style={styles.cardContent}>DATA ANALYSIS IN EXCEL</Text>
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <View style={{flexDirection: 'row', gap: 10}}>
-            <Text style={[styles.cardTitle, {backgroundColor: Percentage(94)}]}>94%</Text>
-            <Text style={styles.cardContent}>PYTHON FOR DATA ANALYTICS</Text>
-          </View>
-        </View>
-
+        <FlatList
+          data={cards}
+          keyExtractor={(item) => item.id.toString()}
+          ItemSeparatorComponent={() => <View style={{paddingVertical: 5}} />}
+          renderItem={({ item }) => (
+            <Pressable onPress={() => console.log(`Card ${item.id} pressed`)}>
+              <View style={styles.card}>
+                <View style={{flexDirection: 'row', gap: 10}}>
+                  <Text style={[styles.cardTitle, {backgroundColor: Percentage(item.attendance)}]}>{item.attendance}%</Text>
+                  <Text style={styles.cardContent}>{item.title}</Text>
+                </View>
+              </View>
+            </Pressable>
+          )}
+        />
+      
       </View>
     </View>
   )
@@ -69,13 +52,13 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   cardContainer: {
+    flex: 1,
     marginHorizontal: 20,
   },
   card: {
     width: '100%',
     paddingHorizontal: 10,
     paddingVertical: 20,
-    marginBottom: 12,
     // backgroundColor: 'black',
     backgroundColor: 'white',
     borderRadius: 10,

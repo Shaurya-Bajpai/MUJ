@@ -173,33 +173,49 @@ export default function Details({
 
         <View style={styles.divider} />
 
-        <View style={{flexDirection: 'row',}}>
-            <View style={{backgroundColor: 'lightgray', padding: 20, borderRadius: 8, flex: 1}}>
+        {/* Target Attendance */}
 
-                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10}}>
-                    <Text style={styles.percentText}>Target Attendance</Text>
-                    <Text style={styles.percentText}>{targetAttendance}%</Text>
-                </View>
+        <View style={styles.targetCard}>
 
-                <Slider
-                    // style={{width: '100%', height: 36}}
-                    minimumValue={50}
-                    maximumValue={100}
-                    step={5}
-                    value={targetAttendance}
-                    onValueChange={(value) => setTargetAttendance(value)}
-                    minimumTrackTintColor="black"
-                    maximumTrackTintColor="gray"
-                    thumbTintColor="gray"
-                />
+            <View style={styles.targetHeader}>
+                <Text style={styles.targetTitle}>
+                    Target Attendance
+                </Text>
 
-                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10}}>
-                    <Text style={[styles.percentText, {color: 'gray'}]}>50%</Text>
-                    <Text style={[styles.percentText, {color: 'gray'}]}>100%</Text>
-                </View>
-
+                <Text style={styles.targetValue}>
+                    {targetAttendance}%
+                </Text>
             </View>
+
+            <Slider
+                style={styles.targetSlider}
+                minimumValue={50}
+                maximumValue={100}
+                step={5}
+                value={targetAttendance}
+                onValueChange={(value) => setTargetAttendance(value)}
+                minimumTrackTintColor="#14C99A"
+                maximumTrackTintColor="#3A4354"
+                thumbTintColor="#FFFFFF"
+            />
+
+            <View style={styles.targetScale}>
+                <Text style={styles.targetScaleText}>
+                    50%
+                </Text>
+
+                <Text style={styles.targetScaleText}>
+                    75% (College Req)
+                </Text>
+
+                <Text style={styles.targetScaleText}>
+                    100%
+                </Text>
+            </View>
+
         </View>
+
+        <View style={styles.sectionDivider} />
         
 
         <View style={styles.divider} />
@@ -698,6 +714,62 @@ const styles = StyleSheet.create({
     ratioAbsent: {
         backgroundColor: '#FF4668',
     },
+
+
+    // Target Attendance
+    targetCard: {
+        backgroundColor: '#1B2638',
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#2B374B',
+        paddingHorizontal: 20,
+        paddingVertical: 18,
+    },
+
+    targetHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+
+    targetTitle: {
+        color: '#DCE2EC',
+        fontSize: 15,
+        fontWeight: '700',
+    },
+
+    targetValue: {
+        color: '#8797FF',
+        fontSize: 18,
+        fontWeight: '800',
+    },
+
+    targetSlider: {
+        width: '100%',
+        height: 42,
+        marginTop: 5,
+    },
+
+    targetScale: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: -2,
+    },
+
+    targetScaleText: {
+        color: '#9BA7B9',
+        fontSize: 12,
+    },
+
+    sectionDivider: {
+        height: 1,
+        backgroundColor: '#263147',
+        marginVertical: 12,
+    },
+
+
+
 
     divider: {
         height: 1,

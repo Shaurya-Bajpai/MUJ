@@ -235,7 +235,13 @@ export default function Details({
                     <Text style={styles.simulatorTitle}>Attendance Simulator</Text>
                 </View>
 
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        setPresentCount(0);
+                        setAbsentCount(0);
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    }}
+                >
                     <Text style={styles.resetText}>Reset</Text>
                 </TouchableOpacity>
             </View>
@@ -314,40 +320,94 @@ export default function Details({
 
 
 
-            {/* Predicted Attendance */}
-            <View style={styles.result}>
-                <View style={[styles.card, {flex: 1}]}>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                        <Text style={styles.percentText}>Predicted Attendance</Text>
-                        <Text style={styles.countText}>
-                            {
-                                presentCount + absentCount === 0 ? 
-                                    (
-                                        present + absent === 0 ? 0 : Math.round((present / (present + absent)) * 100)
-                                    ) : Math.round((presentCount / (presentCount + absentCount)) * 100)
-                            }%
-                        </Text>
+            {/* Projected Attendance */}
+            <View style={styles.projectedCard}>
+                {/* Header */}
+                <View style={styles.projectedHeader}>
+                    <View >
+                        <Text style={styles.projectedTitle}>PROJECTED ATTENDANCE</Text>
+                        {
+                            targetAttendance - (presentCount + present) / (present + absent + presentCount + absentCount) * 100 > 0 ? (
+                                <Text style={styles.belowTarget}>
+                                    •&nbsp;
+                                    {
+                                        targetAttendance - (presentCount + present) / (present + absent + presentCount + absentCount) * 100 > 0 ? (
+                                            Math.round(targetAttendance - ((presentCount + present) / (present + absent + presentCount + absentCount) * 100))
+                                        )
+                                        : 0
+                                    }
+                                    % below target</Text>
+                            ) : null
+                        }
                     </View>
 
-                    <View style={styles.resultSlider} />
+                    <Text style={styles.projectedPercentage}>
+                    {
+                        presentCount + absentCount === 0 ? (
+                            present + absent === 0 ? 0 : Math.round((present / (present + absent)) * 100)
+                        )
+                        : Math.round(((presentCount + present) / (present + absent + presentCount + absentCount)) * 100)
+                    }%
+                </Text>
 
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', gap: 10, marginTop: 10}}>
-                        <View style={[styles.predictClasses, {backgroundColor: 'lightgreen'}]}>
-                            <Text style={styles.percentText}>{present + presentCount}</Text>
-                            <Text style={styles.percentText}>Present</Text>
-                        </View>
-                        <View style={[styles.predictClasses, {backgroundColor: 'lightcoral'}]}>
-                            <Text style={styles.percentText}>{absent + absentCount}</Text>
-                            <Text style={styles.percentText}>Absent</Text>
-                        </View>
-                        <View style={[styles.predictClasses, {backgroundColor: 'lightgray'}]}>
-                            <Text style={styles.percentText}>{present + presentCount + absent + absentCount}</Text>
-                            <Text style={styles.percentText}>Total</Text>
-                        </View>
+                </View>
+
+
+                {/* Projection Bar */}
+
+                <View style={styles.projectedBarContainer}>
+                    <View style={styles.projectedBar}>
+                        <View
+                            style={[
+                                styles.projectedBarFill,
+                                {
+                                    width: `${
+                                        presentCount + absentCount === 0 ? (
+                                            present + absent === 0? 0: Math.round((present /(present + absent)) *100)
+                                        )
+                                        : Math.round(((presentCount + present) / (present + absent + presentCount + absentCount)) * 100)
+                                    }%`,
+                                },
+                            ]}
+                        />
+
+                        {/* Target marker */}
+                        <View
+                            style={[
+                                styles.targetMarker,
+                                {
+                                    left: `${targetAttendance}%`,
+                                },
+                            ]}
+                        />
+
+                    </View>
+
+                </View>
+
+
+                {/* Projected Numbers */}
+
+                <View style={styles.projectedStats}>
+                    {/* Present */}
+                    <View style={styles.projectedPresentBox}>
+                        <Text style={styles.projectedNumberPresent}>{present + presentCount}</Text>
+                        <Text style={styles.projectedLabel}>PRESENT</Text>
+                    </View>
+
+                    {/* Absent */}
+                    <View style={styles.projectedAbsentBox}>
+                        <Text style={styles.projectedNumberAbsent}>{absent + absentCount}</Text>
+                        <Text style={styles.projectedLabel}>ABSENT</Text>
+                    </View>
+
+                    {/* Total */}
+                    <View style={styles.projectedTotalBox}>
+                        <Text style={styles.projectedNumberTotal}>{present +presentCount +absent +absentCount}</Text>
+                        <Text style={styles.projectedLabel}>TOTAL</Text>
                     </View>
                 </View>
             </View>
-            
         </View>
     </ScrollView>
   )
@@ -945,6 +1005,134 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '800',
     },
+
+
+    projectedCard: {
+        backgroundColor: '#121C2D',
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#344158',
+        padding: 20,
+        marginTop: 2,
+    },
+
+    projectedHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+    },
+
+    projectedTitle: {
+        color: '#9BA7B9',
+        fontSize: 14,
+        fontWeight: '800',
+        letterSpacing: 0.7,
+    },
+
+    belowTarget: {
+        color: '#FF7188',
+        fontSize: 12,
+        fontWeight: '700',
+        marginTop: 5,
+    },
+
+    projectedPercentage: {
+        color: '#FF6682',
+        fontSize: 32,
+        fontWeight: '900',
+    },
+
+    projectedBarContainer: {
+        marginTop: 14,
+        marginBottom: 16,
+    },
+
+    projectedBar: {
+        height: 11,
+        backgroundColor: '#080F1D',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#283449',
+        overflow: 'hidden',
+        position: 'relative',
+    },
+
+    projectedBarFill: {
+        height: '100%',
+        borderRadius: 8,
+        backgroundColor: '#FF4D65',
+    },
+
+    targetMarker: {
+        position: 'absolute',
+        top: -2,
+        bottom: -2,
+        width: 3,
+        backgroundColor: '#FFFFFF',
+        marginLeft: -1.5,
+    },
+
+    projectedStats: {
+        flexDirection: 'row',
+        gap: 10,
+    },
+
+    projectedPresentBox: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#102B32',
+        borderWidth: 1,
+        borderColor: '#075C51',
+        borderRadius: 14,
+        paddingVertical: 10,
+    },
+
+    projectedAbsentBox: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#2B1C2D',
+        borderWidth: 1,
+        borderColor: '#63233E',
+        borderRadius: 14,
+        paddingVertical: 10,
+    },
+
+    projectedTotalBox: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#1B2638',
+        borderWidth: 1,
+        borderColor: '#344158',
+        borderRadius: 14,
+        paddingVertical: 10,
+    },
+
+    projectedNumberPresent: {
+        color: '#25D3A3',
+        fontSize: 16,
+        fontWeight: '800',
+    },
+
+    projectedNumberAbsent: {
+        color: '#FF6682',
+        fontSize: 16,
+        fontWeight: '800',
+    },
+
+    projectedNumberTotal: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: '800',
+    },
+
+    projectedLabel: {
+        color: '#9BA7B9',
+        fontSize: 11,
+        fontWeight: '700',
+        marginTop: 3,
+        letterSpacing: 0.3,
+    },
+
 
 
     divider: {

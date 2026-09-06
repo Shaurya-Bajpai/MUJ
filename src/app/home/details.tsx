@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useState } from 'react'
 import * as Haptics from 'expo-haptics';
 import Slider from '@react-native-community/slider';
@@ -23,311 +23,349 @@ export default function Details({
     const [targetAttendance, setTargetAttendance] = useState(70);
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+    >
+        <View style={styles.container}>
 
-        {/* Header */}
-        <View style={styles.header}>
-            <TouchableOpacity style={styles.headerButton}>
-                <Text style={styles.backIcon}>‹</Text>
-            </TouchableOpacity>
+            {/* Header */}
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.headerButton}>
+                    <Text style={styles.backIcon}>‹</Text>
+                </TouchableOpacity>
 
-            <View style={styles.headerCenter}>
-                <View style={styles.courseCodePill}>
-                    <Text style={styles.courseCodeText}>{courseCode}</Text>
+                <View style={styles.headerCenter}>
+                    <View style={styles.courseCodePill}>
+                        <Text style={styles.courseCodeText}>{courseCode}</Text>
+                    </View>
                 </View>
+
+                <TouchableOpacity style={styles.headerButton}>
+                    <Text style={styles.settingsIcon}>⚙</Text>
+                </TouchableOpacity>
+
             </View>
 
-            <TouchableOpacity style={styles.headerButton}>
-                <Text style={styles.settingsIcon}>⚙</Text>
-            </TouchableOpacity>
+            {/* Course Information */}
+            <View style={styles.courseCard}>
+                <View style={styles.courseTopRow}>
+                    <View style={styles.courseHeadingContainer}>
 
-        </View>
+                        <View style={styles.departmentRow}>
+                            <Text style={styles.departmentText}>DEPARTMENT OF CS</Text>
+                            <Text style={styles.dot}>•</Text>
+                            <Text style={styles.sectionText}>Section B</Text>
+                        </View>
 
-        {/* Course Information */}
-        <View style={styles.courseCard}>
-            <View style={styles.courseTopRow}>
-                <View style={styles.courseHeadingContainer}>
+                        <Text style={styles.courseName}>{courseName}</Text>
 
-                    <View style={styles.departmentRow}>
-                        <Text style={styles.departmentText}>DEPARTMENT OF CS</Text>
-                        <Text style={styles.dot}>•</Text>
-                        <Text style={styles.sectionText}>Section B</Text>
+                        <Text style={styles.professorText}>♙  Prof. Sarah Jenkins • Hall 402</Text>
+
                     </View>
 
-                    <Text style={styles.courseName}>{courseName}</Text>
-
-                    <Text style={styles.professorText}>♙  Prof. Sarah Jenkins • Hall 402</Text>
-
-                </View>
-
-                <View style={styles.targetBadge}>
-                    <Text style={styles.targetBadgeText}>
-                        Behind
-                    </Text>
-
-                    <Text style={styles.targetBadgeText}>
-                        Target
-                    </Text>
-                </View>
-
-            </View>
-
-
-            <View style={styles.courseDivider} />
-
-            <View style={styles.infoRow}>
-                <View style={styles.infoIcon}>
-                    <Text style={styles.infoIconText}>
-                        i
-                    </Text>
-                </View>
-
-                <Text style={styles.infoText}>
-                    Attend next{' '}
-                    <Text style={styles.infoHighlight}>
-                        7 consecutive classes
-                    </Text>{' '}
-                    to reach 75%
-                </Text>
-            </View>
-
-        </View>
-
-
-        <View style={styles.sectionSpacing} />
-
-
-        {/* Attendance */}
-        <View style={styles.attendanceCard}>
-
-            {/* Top section */}
-            <View style={styles.attendanceTop}>
-
-                {/* Circular percentage */}
-                <View style={styles.attendanceCircle}>
-                    <View style={styles.attendanceCircleInner}>
-                        <Text style={styles.attendancePercentage}>
-                            {
-                                present + absent === 0? 0: Math.round((present / (present + absent)) * 100)
-                            }%
+                    <View style={styles.targetBadge}>
+                        <Text style={styles.targetBadgeText}>
+                            Behind
                         </Text>
 
-                        <Text style={styles.currentText}>CURRENT</Text>
-                    </View>
-                </View>
-
-
-                {/* Total classes */}
-                <View style={styles.totalClassesContainer}>
-                    <Text style={styles.totalLabel}>TOTAL</Text>
-
-                    <Text style={styles.totalLabel}>CLASSES</Text>
-
-                    <View style={styles.totalNumberRow}>
-                        <Text style={styles.totalNumber}>{present + absent}</Text>
-                        <Text style={styles.heldText}>held</Text>
+                        <Text style={styles.targetBadgeText}>
+                            Target
+                        </Text>
                     </View>
 
-                    <Text style={styles.minimumText}>Min. required:</Text>
-
-                    <Text style={styles.minimumPercentage}>75%</Text>
-
                 </View>
 
 
-                {/* Present / Absent */}
-                <View style={styles.attendanceStats}>
-                    {/* Present */}
-                    <View style={styles.statPresent}>
-                        <View style={styles.statDotPresent} />
-                        <Text style={styles.statTextPresent}>Present</Text>
-                        <Text style={styles.statNumberPresent}>{present}</Text>
+                <View style={styles.courseDivider} />
+
+                <View style={styles.infoRow}>
+                    <View style={styles.infoIcon}>
+                        <Text style={styles.infoIconText}>
+                            i
+                        </Text>
                     </View>
 
-                    {/* Absent */}
-                    <View style={styles.statAbsent}>
-                        <View style={styles.statDotAbsent} />
-                        <Text style={styles.statTextAbsent}>Absent</Text>
-                        <Text style={styles.statNumberAbsent}>{absent}</Text>
-                    </View>
-                </View>
-            </View>
-
-
-            {/* Ratio distribution */}
-            <View style={styles.ratioSection}>
-                <View style={styles.ratioHeader}>
-                    <Text style={styles.ratioTitle}>Ratio Distribution</Text>
-                    <Text style={styles.ratioNumbers}>{present} P / {absent} A</Text>
-                </View>
-
-
-                <View style={styles.ratioBar}>
-                    <View style={[styles.ratioPresent,{flex:present + absent === 0? 0: present}]} />
-                    <View style={[styles.ratioAbsent,{flex:present + absent === 0? 0: absent}]} />
-                </View>
-
-            </View>
-
-        </View>
-
-        <View style={styles.divider} />
-
-        {/* Target Attendance */}
-
-        <View style={styles.targetCard}>
-
-            <View style={styles.targetHeader}>
-                <Text style={styles.targetTitle}>
-                    Target Attendance
-                </Text>
-
-                <Text style={styles.targetValue}>
-                    {targetAttendance}%
-                </Text>
-            </View>
-
-            <Slider
-                style={styles.targetSlider}
-                minimumValue={50}
-                maximumValue={100}
-                step={5}
-                value={targetAttendance}
-                onValueChange={(value) => setTargetAttendance(value)}
-                minimumTrackTintColor="#14C99A"
-                maximumTrackTintColor="#3A4354"
-                thumbTintColor="#FFFFFF"
-            />
-
-            <View style={styles.targetScale}>
-                <Text style={styles.targetScaleText}>
-                    50%
-                </Text>
-
-                <Text style={styles.targetScaleText}>
-                    75% (College Req)
-                </Text>
-
-                <Text style={styles.targetScaleText}>
-                    100%
-                </Text>
-            </View>
-
-        </View>
-
-        <View style={styles.sectionDivider} />
-        
-
-        <View style={styles.divider} />
-
-
-        <View style={styles.percentCalculator}>
-            <View style={styles.percentDetails}>
-                <Text style={styles.percentText}>Attend Classes</Text>
-
-                <View style={styles.present}>
-                    <TouchableOpacity 
-                        style={styles.percentButton}
-                        onPress={() => {
-                            if (presentCount > 0) {
-                                setPresentCount(presentCount - 1);
-                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                            }
-                        }}
-                        disabled={presentCount === 0}
-                    >
-                        <Text style={[styles.button, styles.subtractButton]}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.countText}>{presentCount}</Text>
-                    <TouchableOpacity 
-                        style={styles.percentButton}
-                        onPress={() => {
-                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                            setPresentCount(presentCount + 1);
-                        }}
-                    >
-                        <Text style={[styles.button, styles.addButton, {backgroundColor: 'green'}]}>+</Text>
-                    </TouchableOpacity>
-                </View>
-                
-            </View>
-
-            <View style={styles.percentDetails}>
-                <Text style={styles.percentText}>Miss Classes</Text>
-                <View style={styles.absent}>
-                    <TouchableOpacity 
-                        style={styles.percentButton}
-                        onPress={() => {
-                            if (absentCount > 0) {
-                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                                setAbsentCount(absentCount - 1);
-                            }
-                        }}
-                        disabled={absentCount === 0}
-                    >
-                        <Text style={[styles.button, styles.subtractButton]}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.countText}>{absentCount}</Text>
-                    <TouchableOpacity 
-                        style={styles.percentButton}
-                        onPress={() => {
-                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                            setAbsentCount(absentCount + 1);
-                        }}
-                    >
-                        <Text style={[styles.button, styles.addButton, {backgroundColor: 'lightcoral'}]}>+</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
-
-
-        <View style={styles.divider} />
-
-
-
-        {/* Predicted Attendance */}
-        <View style={styles.result}>
-            <View style={[styles.card, {flex: 1}]}>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <Text style={styles.percentText}>Predicted Attendance</Text>
-                    <Text style={styles.countText}>
-                        {
-                            presentCount + absentCount === 0 ? 
-                                (
-                                    present + absent === 0 ? 0 : Math.round((present / (present + absent)) * 100)
-                                ) : Math.round((presentCount / (presentCount + absentCount)) * 100)
-                        }%
+                    <Text style={styles.infoText}>
+                        Attend next{' '}
+                        <Text style={styles.infoHighlight}>
+                            7 consecutive classes
+                        </Text>{' '}
+                        to reach 75%
                     </Text>
                 </View>
 
-                <View style={styles.resultSlider} />
+            </View>
 
-                <View style={{flexDirection: 'row', justifyContent: 'space-between', gap: 10, marginTop: 10}}>
-                    <View style={[styles.predictClasses, {backgroundColor: 'lightgreen'}]}>
-                        <Text style={styles.percentText}>{present + presentCount}</Text>
-                        <Text style={styles.percentText}>Present</Text>
+
+            <View style={styles.sectionSpacing} />
+
+
+            {/* Attendance */}
+            <View style={styles.attendanceCard}>
+
+                {/* Top section */}
+                <View style={styles.attendanceTop}>
+
+                    {/* Circular percentage */}
+                    <View style={styles.attendanceCircle}>
+                        <View style={styles.attendanceCircleInner}>
+                            <Text style={styles.attendancePercentage}>
+                                {
+                                    present + absent === 0? 0: Math.round((present / (present + absent)) * 100)
+                                }%
+                            </Text>
+
+                            <Text style={styles.currentText}>CURRENT</Text>
+                        </View>
                     </View>
-                    <View style={[styles.predictClasses, {backgroundColor: 'lightcoral'}]}>
-                        <Text style={styles.percentText}>{absent + absentCount}</Text>
-                        <Text style={styles.percentText}>Absent</Text>
+
+
+                    {/* Total classes */}
+                    <View style={styles.totalClassesContainer}>
+                        <Text style={styles.totalLabel}>TOTAL</Text>
+
+                        <Text style={styles.totalLabel}>CLASSES</Text>
+
+                        <View style={styles.totalNumberRow}>
+                            <Text style={styles.totalNumber}>{present + absent}</Text>
+                            <Text style={styles.heldText}>held</Text>
+                        </View>
+
+                        <Text style={styles.minimumText}>Min. required:</Text>
+
+                        <Text style={styles.minimumPercentage}>75%</Text>
+
                     </View>
-                    <View style={[styles.predictClasses, {backgroundColor: 'lightgray'}]}>
-                        <Text style={styles.percentText}>{present + presentCount + absent + absentCount}</Text>
-                        <Text style={styles.percentText}>Total</Text>
+
+
+                    {/* Present / Absent */}
+                    <View style={styles.attendanceStats}>
+                        {/* Present */}
+                        <View style={styles.statPresent}>
+                            <View style={styles.statDotPresent} />
+                            <Text style={styles.statTextPresent}>Present</Text>
+                            <Text style={styles.statNumberPresent}>{present}</Text>
+                        </View>
+
+                        {/* Absent */}
+                        <View style={styles.statAbsent}>
+                            <View style={styles.statDotAbsent} />
+                            <Text style={styles.statTextAbsent}>Absent</Text>
+                            <Text style={styles.statNumberAbsent}>{absent}</Text>
+                        </View>
+                    </View>
+                </View>
+
+
+                {/* Ratio distribution */}
+                <View style={styles.ratioSection}>
+                    <View style={styles.ratioHeader}>
+                        <Text style={styles.ratioTitle}>Ratio Distribution</Text>
+                        <Text style={styles.ratioNumbers}>{present} P / {absent} A</Text>
+                    </View>
+
+
+                    <View style={styles.ratioBar}>
+                        <View style={[styles.ratioPresent,{flex:present + absent === 0? 0: present}]} />
+                        <View style={[styles.ratioAbsent,{flex:present + absent === 0? 0: absent}]} />
+                    </View>
+
+                </View>
+
+            </View>
+
+            <View style={styles.divider} />
+
+            {/* Target Attendance */}
+
+            <View style={styles.targetCard}>
+
+                <View style={styles.targetHeader}>
+                    <Text style={styles.targetTitle}>
+                        Target Attendance
+                    </Text>
+
+                    <Text style={styles.targetValue}>
+                        {targetAttendance}%
+                    </Text>
+                </View>
+
+                <Slider
+                    style={styles.targetSlider}
+                    minimumValue={50}
+                    maximumValue={100}
+                    step={5}
+                    value={targetAttendance}
+                    onValueChange={(value) => setTargetAttendance(value)}
+                    minimumTrackTintColor="#14C99A"
+                    maximumTrackTintColor="#3A4354"
+                    thumbTintColor="#FFFFFF"
+                />
+
+                <View style={styles.targetScale}>
+                    <Text style={styles.targetScaleText}>
+                        50%
+                    </Text>
+
+                    <Text style={styles.targetScaleText}>
+                        75% (College Req)
+                    </Text>
+
+                    <Text style={styles.targetScaleText}>
+                        100%
+                    </Text>
+                </View>
+
+            </View>
+
+            <View style={styles.sectionDivider} />
+            
+
+            <View style={styles.divider} />
+
+
+            {/* Attendance Simulator */}
+            <View style={styles.simulatorHeader}>
+                <View style={styles.simulatorTitleRow}>
+                    <View style={styles.simulatorIcon}>
+                        <Text style={styles.simulatorIconText}>▣</Text>
+                    </View>
+
+                    <Text style={styles.simulatorTitle}>Attendance Simulator</Text>
+                </View>
+
+                <TouchableOpacity>
+                    <Text style={styles.resetText}>Reset</Text>
+                </TouchableOpacity>
+            </View>
+
+
+            <View style={styles.simulatorCards}>
+                {/* Attend */}
+                <View style={styles.simulatorCardAttend}>
+                    <Text style={styles.simulatorCardTitleAttend}>✓ Attend Next</Text>
+
+                    <Text style={styles.simulatorCount}>{presentCount}</Text>
+
+                    <View style={styles.counterRow}>
+                        <TouchableOpacity
+                            style={styles.counterMinus}
+                            onPress={() => {
+                                if (presentCount > 0) {
+                                    setPresentCount(presentCount - 1);
+                                    Haptics.impactAsync(
+                                        Haptics.ImpactFeedbackStyle.Light
+                                    );
+                                }
+                            }}
+                            disabled={presentCount === 0}
+                        >
+                            <Text style={styles.counterMinusText}>-</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.counterPlusAttend}
+                            onPress={() => {
+                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                setPresentCount(presentCount + 1);
+                            }}
+                        >
+                            <Text style={styles.counterPlusText}>+</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                </View>
+
+                {/* Miss */}
+                <View style={styles.simulatorCardMiss}>
+                    <Text style={styles.simulatorCardTitleMiss}>× Miss / Bunk</Text>
+                    <Text style={styles.simulatorCount}>{absentCount}</Text>
+                    
+                    <View style={styles.counterRow}>
+                        <TouchableOpacity
+                            style={styles.counterMinus}
+                            onPress={() => {
+                                if (absentCount > 0) {
+                                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                    setAbsentCount(absentCount - 1);
+                                }
+                            }}
+                            disabled={absentCount === 0}
+                        >
+                            <Text style={styles.counterMinusText}>-</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.counterPlusMiss}
+                            onPress={() => {
+                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                setAbsentCount(absentCount + 1);
+                            }}
+                        >
+                            <Text style={styles.counterPlusText}>+</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
+
+
+            <View style={styles.divider} />
+
+
+
+            {/* Predicted Attendance */}
+            <View style={styles.result}>
+                <View style={[styles.card, {flex: 1}]}>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                        <Text style={styles.percentText}>Predicted Attendance</Text>
+                        <Text style={styles.countText}>
+                            {
+                                presentCount + absentCount === 0 ? 
+                                    (
+                                        present + absent === 0 ? 0 : Math.round((present / (present + absent)) * 100)
+                                    ) : Math.round((presentCount / (presentCount + absentCount)) * 100)
+                            }%
+                        </Text>
+                    </View>
+
+                    <View style={styles.resultSlider} />
+
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', gap: 10, marginTop: 10}}>
+                        <View style={[styles.predictClasses, {backgroundColor: 'lightgreen'}]}>
+                            <Text style={styles.percentText}>{present + presentCount}</Text>
+                            <Text style={styles.percentText}>Present</Text>
+                        </View>
+                        <View style={[styles.predictClasses, {backgroundColor: 'lightcoral'}]}>
+                            <Text style={styles.percentText}>{absent + absentCount}</Text>
+                            <Text style={styles.percentText}>Absent</Text>
+                        </View>
+                        <View style={[styles.predictClasses, {backgroundColor: 'lightgray'}]}>
+                            <Text style={styles.percentText}>{present + presentCount + absent + absentCount}</Text>
+                            <Text style={styles.percentText}>Total</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+            
         </View>
-        
-    </View>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-    container: {
+    scrollView: {
         flex: 1,
-        marginTop: 50,
+        backgroundColor: '#07101F',
+    },
+
+    scrollContent: {
+        backgroundColor: '#07101F',
+        paddingBottom: 30,
+    },
+
+    container: {
+        marginTop: 20,
         marginHorizontal: 20,
     },
 
@@ -769,6 +807,144 @@ const styles = StyleSheet.create({
     },
 
 
+
+    // Attendance Simulator
+    simulatorHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 14,
+    },
+
+    simulatorTitleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    simulatorIcon: {
+        width: 34,
+        height: 34,
+        borderRadius: 10,
+        backgroundColor: '#202A5A',
+        borderWidth: 1,
+        borderColor: '#39468C',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 9,
+    },
+
+    simulatorIconText: {
+        color: '#91A0FF',
+        fontSize: 17,
+    },
+
+    simulatorTitle: {
+        color: '#FFFFFF',
+        fontSize: 17,
+        fontWeight: '800',
+    },
+
+    resetText: {
+        color: '#8997FF',
+        fontSize: 13,
+        fontWeight: '600',
+    },
+
+    simulatorCards: {
+        flexDirection: 'row',
+        gap: 14,
+    },
+
+    simulatorCardAttend: {
+        flex: 1,
+        minWidth: 0,
+        backgroundColor: '#101F2D',
+        borderWidth: 1,
+        borderColor: '#075C51',
+        borderRadius: 20,
+        padding: 18,
+        alignItems: 'center',
+    },
+
+    simulatorCardMiss: {
+        flex: 1,
+        minWidth: 0,
+        backgroundColor: '#201827',
+        borderWidth: 1,
+        borderColor: '#63233E',
+        borderRadius: 20,
+        padding: 18,
+        alignItems: 'center',
+    },
+
+    simulatorCardTitleAttend: {
+        color: '#3BD5A7',
+        fontSize: 13,
+        fontWeight: '800',
+        marginBottom: 14,
+    },
+
+    simulatorCardTitleMiss: {
+        color: '#FF6682',
+        fontSize: 13,
+        fontWeight: '800',
+        marginBottom: 14,
+    },
+
+    simulatorCount: {
+        color: '#FFFFFF',
+        fontSize: 32,
+        fontWeight: '800',
+        marginBottom: 14,
+    },
+
+    counterRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 12,
+    },
+
+    counterMinus: {
+        width: 40,
+        height: 40,
+        borderRadius: 13,
+        backgroundColor: '#202B3D',
+        borderWidth: 1,
+        borderColor: '#344158',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    counterMinusText: {
+        color: '#FFFFFF',
+        fontSize: 20,
+        fontWeight: '800',
+    },
+
+    counterPlusAttend: {
+        width: 40,
+        height: 40,
+        borderRadius: 13,
+        backgroundColor: '#10C994',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    counterPlusMiss: {
+        width: 40,
+        height: 40,
+        borderRadius: 13,
+        backgroundColor: '#FF4668',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    counterPlusText: {
+        color: '#FFFFFF',
+        fontSize: 20,
+        fontWeight: '800',
+    },
 
 
     divider: {

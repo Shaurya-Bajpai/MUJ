@@ -25,22 +25,76 @@ export default function Details({
   return (
     <View style={styles.container}>
 
-        {/* Course Details */}
-        <View>
-            <View style={{flexDirection: 'row'}}>
-                <Text style={styles.title}>Code: </Text>
-                <Text style={styles.subTitle}>{courseCode}</Text>
+        {/* Header */}
+        <View style={styles.header}>
+            <TouchableOpacity style={styles.headerButton}>
+                <Text style={styles.backIcon}>‹</Text>
+            </TouchableOpacity>
+
+            <View style={styles.headerCenter}>
+                <View style={styles.courseCodePill}>
+                    <Text style={styles.courseCodeText}>{courseCode}</Text>
+                </View>
             </View>
 
-            <View style={styles.divider} />
+            <TouchableOpacity style={styles.headerButton}>
+                <Text style={styles.settingsIcon}>⚙</Text>
+            </TouchableOpacity>
 
-            <View style={{flexDirection: 'row'}}>
-                <Text style={styles.title}>Course Name: </Text>
-                <Text style={styles.subTitle}>{courseName}</Text>
-            </View>
         </View>
 
-        <View style={styles.divider} />
+        {/* Course Information */}
+        <View style={styles.courseCard}>
+            <View style={styles.courseTopRow}>
+                <View style={styles.courseHeadingContainer}>
+
+                    <View style={styles.departmentRow}>
+                        <Text style={styles.departmentText}>DEPARTMENT OF CS</Text>
+                        <Text style={styles.dot}>•</Text>
+                        <Text style={styles.sectionText}>Section B</Text>
+                    </View>
+
+                    <Text style={styles.courseName}>{courseName}</Text>
+
+                    <Text style={styles.professorText}>♙  Prof. Sarah Jenkins • Hall 402</Text>
+
+                </View>
+
+                <View style={styles.targetBadge}>
+                    <Text style={styles.targetBadgeText}>
+                        Behind
+                    </Text>
+
+                    <Text style={styles.targetBadgeText}>
+                        Target
+                    </Text>
+                </View>
+
+            </View>
+
+
+            <View style={styles.courseDivider} />
+
+            <View style={styles.infoRow}>
+                <View style={styles.infoIcon}>
+                    <Text style={styles.infoIconText}>
+                        i
+                    </Text>
+                </View>
+
+                <Text style={styles.infoText}>
+                    Attend next{' '}
+                    <Text style={styles.infoHighlight}>
+                        7 consecutive classes
+                    </Text>{' '}
+                    to reach 75%
+                </Text>
+            </View>
+
+        </View>
+
+
+        <View style={styles.sectionSpacing} />
 
         <View style={styles.attendance}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10}}>
@@ -233,6 +287,190 @@ const styles = StyleSheet.create({
         marginTop: 50,
         marginHorizontal: 20,
     },
+
+    // Header
+    header: {
+        height: 60,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+    },
+
+    headerButton: {
+        width: 48,
+        height: 48,
+        borderRadius: 16,
+        backgroundColor: '#101A2B',
+        borderWidth: 1,
+        borderColor: '#1E2A3C',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    backIcon: {
+        color: '#D8E0EA',
+        fontSize: 38,
+        fontWeight: '300',
+        lineHeight: 40,
+        marginTop: -5,
+    },
+
+    settingsIcon: {
+        color: '#D8E0EA',
+        fontSize: 24,
+    },
+
+    headerCenter: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+    },
+
+    courseCodePill: {
+        paddingHorizontal: 15,
+        paddingVertical: 7,
+        borderRadius: 20,
+        backgroundColor: '#0D1D2B',
+        borderWidth: 1,
+        borderColor: '#064F48',
+    },
+
+    courseCodeText: {
+        color: '#22D3A3',
+        fontSize: 14,
+        fontWeight: '800',
+        letterSpacing: 0.5,
+    },
+
+    semesterText: {
+        color: '#AAB3C2',
+        fontSize: 14,
+    },
+
+
+    // Course card
+
+    courseCard: {
+        backgroundColor: '#121C2D',
+        borderRadius: 28,
+        borderWidth: 1,
+        borderColor: '#26334A',
+        padding: 24,
+    },
+
+    courseTopRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+    },
+
+    courseHeadingContainer: {
+        flex: 1,
+        paddingRight: 12,
+    },
+
+    departmentRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 7,
+    },
+
+    departmentText: {
+        color: '#A8B3C6',
+        fontSize: 14,
+        fontWeight: '800',
+        letterSpacing: 0.5,
+    },
+
+    dot: {
+        color: '#5D687B',
+        marginHorizontal: 8,
+        fontSize: 14,
+    },
+
+    sectionText: {
+        color: '#9DA8BB',
+        fontSize: 13,
+    },
+
+    courseName: {
+        color: '#FFFFFF',
+        fontSize: 23,
+        lineHeight: 28,
+        fontWeight: '800',
+    },
+
+    professorText: {
+        color: '#9AA5B8',
+        fontSize: 14,
+        marginTop: 8,
+    },
+
+    targetBadge: {
+        backgroundColor: '#32182A',
+        borderWidth: 1,
+        borderColor: '#7A294A',
+        borderRadius: 22,
+        paddingHorizontal: 13,
+        paddingVertical: 8,
+        alignItems: 'center',
+    },
+
+    targetBadgeText: {
+        color: '#FF6C8B',
+        fontSize: 13,
+        fontWeight: '800',
+    },
+
+    courseDivider: {
+        height: 1,
+        backgroundColor: '#263147',
+        marginVertical: 18,
+    },
+
+    infoRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    infoIcon: {
+        width: 28,
+        height: 28,
+        borderRadius: 9,
+        backgroundColor: '#292C29',
+        borderWidth: 1,
+        borderColor: '#665B27',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 10,
+    },
+
+    infoIconText: {
+        color: '#F3C84B',
+        fontSize: 15,
+        fontWeight: '800',
+    },
+
+    infoText: {
+        flex: 1,
+        color: '#D3D9E3',
+        fontSize: 14,
+        lineHeight: 20,
+    },
+
+    infoHighlight: {
+        color: '#19D19B',
+        fontWeight: '800',
+    },
+
+    sectionSpacing: {
+        height: 22,
+    },
+
+
+
+
     divider: {
         height: 1,
         backgroundColor: 'lightgray',

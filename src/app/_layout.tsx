@@ -6,6 +6,7 @@ import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import AppTabs from '@/components/app-tabs';
 import Login from './login/login';
 import Home from './home/home';
+import Details from './home/details';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -15,7 +16,13 @@ export default function TabLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AnimatedSplashOverlay />
       {/* <AppTabs /> */}
-      <Home />
+      {/* <Home /> */}
+      <Details 
+        courseCode="CS101"
+        courseName="Introduction to Computer Science"
+        present={8}
+        absent={5}
+      />
       {/* <Login /> */}
     </ThemeProvider>
   );

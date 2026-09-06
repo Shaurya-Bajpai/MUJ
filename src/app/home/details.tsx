@@ -96,51 +96,78 @@ export default function Details({
 
         <View style={styles.sectionSpacing} />
 
-        <View style={styles.attendance}>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10}}>
-                <View>
-                    <Text style={styles.title}>Attendance </Text>
-                    <Text style={{fontSize: 32, color: 'lightgreen', fontWeight: 'bold'}}>
-                        {
-                            present + absent === 0 ? 0 : Math.round((present / (present + absent)) * 100)
-                        }%
-                    </Text>
+
+        {/* Attendance */}
+        <View style={styles.attendanceCard}>
+
+            {/* Top section */}
+            <View style={styles.attendanceTop}>
+
+                {/* Circular percentage */}
+                <View style={styles.attendanceCircle}>
+                    <View style={styles.attendanceCircleInner}>
+                        <Text style={styles.attendancePercentage}>
+                            {
+                                present + absent === 0? 0: Math.round((present / (present + absent)) * 100)
+                            }%
+                        </Text>
+
+                        <Text style={styles.currentText}>CURRENT</Text>
+                    </View>
                 </View>
 
-                <View>
-                    <Text style={[styles.presentText, styles.attendanceText]}>{present} Present</Text>
-                    <Text style={[styles.absentText, styles.attendanceText]}>{absent} Absent</Text>
+
+                {/* Total classes */}
+                <View style={styles.totalClassesContainer}>
+                    <Text style={styles.totalLabel}>TOTAL</Text>
+
+                    <Text style={styles.totalLabel}>CLASSES</Text>
+
+                    <View style={styles.totalNumberRow}>
+                        <Text style={styles.totalNumber}>{present + absent}</Text>
+                        <Text style={styles.heldText}>held</Text>
+                    </View>
+
+                    <Text style={styles.minimumText}>Min. required:</Text>
+
+                    <Text style={styles.minimumPercentage}>75%</Text>
+
+                </View>
+
+
+                {/* Present / Absent */}
+                <View style={styles.attendanceStats}>
+                    {/* Present */}
+                    <View style={styles.statPresent}>
+                        <View style={styles.statDotPresent} />
+                        <Text style={styles.statTextPresent}>Present</Text>
+                        <Text style={styles.statNumberPresent}>{present}</Text>
+                    </View>
+
+                    {/* Absent */}
+                    <View style={styles.statAbsent}>
+                        <View style={styles.statDotAbsent} />
+                        <Text style={styles.statTextAbsent}>Absent</Text>
+                        <Text style={styles.statNumberAbsent}>{absent}</Text>
+                    </View>
                 </View>
             </View>
-            
-            {/* Attendance Slider */}
-            <View style={{flexDirection: 'row'}}>
-                <View style={{
-                        height: 10,
-                        flex: present + absent === 0 ? 0 : present,
-                        backgroundColor: 'lightgreen',
-                        borderTopLeftRadius: 50,
-                        borderBottomLeftRadius: 50,
-                        borderTopRightRadius: present + absent === 0 ? 50 : 0,
-                        borderBottomRightRadius: present + absent === 0 ? 50 : 0,
-                    }}
-                />
 
-                <View style={{
-                        height: 10,
-                        flex: present + absent === 0 ? 0 : absent,
-                        backgroundColor: 'lightcoral',
-                        borderTopRightRadius: 50,
-                        borderBottomRightRadius: 50,
-                        borderTopLeftRadius: present + absent === 0 ? 50 : 0,
-                        borderBottomLeftRadius: present + absent === 0 ? 50 : 0,
-                    }}
-                />
+
+            {/* Ratio distribution */}
+            <View style={styles.ratioSection}>
+                <View style={styles.ratioHeader}>
+                    <Text style={styles.ratioTitle}>Ratio Distribution</Text>
+                    <Text style={styles.ratioNumbers}>{present} P / {absent} A</Text>
+                </View>
+
+
+                <View style={styles.ratioBar}>
+                    <View style={[styles.ratioPresent,{flex:present + absent === 0? 0: present}]} />
+                    <View style={[styles.ratioAbsent,{flex:present + absent === 0? 0: absent}]} />
+                </View>
+
             </View>
-
-
-
-            <Text style={{textAlign: 'center', color: 'white', fontWeight: '700', letterSpacing: 0.5}}>Total classes: {present + absent}</Text>
 
         </View>
 
@@ -471,6 +498,207 @@ const styles = StyleSheet.create({
 
 
 
+
+    // Attendance card
+    attendanceCard: {
+        backgroundColor: '#121C2D',
+        borderRadius: 28,
+        borderWidth: 1,
+        borderColor: '#26334A',
+        padding: 24,
+    },
+
+    attendanceTop: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+    },
+
+    attendanceCircle: {
+        width: 94,
+        height: 94,
+        borderRadius: 47,
+        borderWidth: 9,
+        borderColor: '#14C99A',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 14,
+        flexShrink: 0,
+    },
+
+    attendanceCircleInner: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    attendancePercentage: {
+        color: '#FFFFFF',
+        fontSize: 25,
+        fontWeight: '800',
+    },
+
+    currentText: {
+        color: '#9AA5B8',
+        fontSize: 11,
+        fontWeight: '800',
+        letterSpacing: 0.5,
+    },
+
+    totalClassesContainer: {
+        flex: 1,
+        minWidth: 0,
+    },
+
+    totalLabel: {
+        color: '#9AA5B8',
+        fontSize: 14,
+        fontWeight: '800',
+        letterSpacing: 0.7,
+    },
+
+    totalNumberRow: {
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        marginTop: 2,
+    },
+
+    totalNumber: {
+        color: '#FFFFFF',
+        fontSize: 28,
+        fontWeight: '800',
+    },
+
+    heldText: {
+        color: '#9AA5B8',
+        fontSize: 13,
+        marginLeft: 5,
+    },
+
+    minimumText: {
+        color: '#9AA5B8',
+        fontSize: 13,
+        marginTop: 4,
+    },
+
+    minimumPercentage: {
+        color: '#FFFFFF',
+        fontSize: 14,
+        fontWeight: '800',
+    },
+
+    attendanceStats: {
+        width: 116,
+        gap: 10,
+        flexShrink: 1,
+    },
+
+    statPresent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#075B50',
+        backgroundColor: '#102B2D',
+        borderRadius: 20,
+        paddingVertical: 8,
+        paddingHorizontal: 9,
+        width: '100%',
+    },
+
+    statAbsent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#61253F',
+        backgroundColor: '#281B2B',
+        borderRadius: 20,
+        paddingVertical: 8,
+        paddingHorizontal: 9,
+        width: '100%',
+    },
+
+    statDotPresent: {
+        width: 9,
+        height: 9,
+        borderRadius: 5,
+        backgroundColor: '#36D6A5',
+        marginRight: 7,
+    },
+
+    statDotAbsent: {
+        width: 9,
+        height: 9,
+        borderRadius: 5,
+        backgroundColor: '#FF6682',
+        marginRight: 7,
+    },
+
+    statTextPresent: {
+        color: '#6FE0BB',
+        fontSize: 12,
+        fontWeight: '700',
+        flex: 1,
+    },
+
+    statTextAbsent: {
+        color: '#FF8BA0',
+        fontSize: 12,
+        fontWeight: '700',
+        flex: 1,
+    },
+
+    statNumberPresent: {
+        color: '#36D6A5',
+        fontSize: 14,
+        fontWeight: '800',
+    },
+
+    statNumberAbsent: {
+        color: '#FF6682',
+        fontSize: 14,
+        fontWeight: '800',
+    },
+
+    ratioSection: {
+        borderTopWidth: 1,
+        borderTopColor: '#263147',
+        marginTop: 20,
+        paddingTop: 17,
+    },
+
+    ratioHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+
+    ratioTitle: {
+        color: '#9AA5B8',
+        fontSize: 13,
+    },
+
+    ratioNumbers: {
+        color: '#D3D9E3',
+        fontSize: 12,
+    },
+
+    ratioBar: {
+        height: 8,
+        width: '100%',
+        flexDirection: 'row',
+        overflow: 'hidden',
+        borderRadius: 5,
+        backgroundColor: '#263147',
+    },
+
+    ratioPresent: {
+        backgroundColor: '#16C79A',
+    },
+
+    ratioAbsent: {
+        backgroundColor: '#FF4668',
+    },
+
     divider: {
         height: 1,
         backgroundColor: 'lightgray',
@@ -512,28 +740,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'black',
         textAlign: 'center',
-    },
-    attendanceText: {
-        fontSize: 16,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 8,
-        fontWeight: 'bold',
-    },
-    presentText: {
-        color: 'green',
-        backgroundColor: 'lightgreen',
-        marginBottom: 8,
-    },
-    absentText: {
-        color: 'red',
-        backgroundColor: 'lightcoral',
-    },
-
-    attendance: {
-        backgroundColor: 'gray',
-        padding: 20,
-        borderRadius: 8,
     },
 
 

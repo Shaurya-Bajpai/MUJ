@@ -18,8 +18,8 @@ export default function TabLayout() {
       {/* <AppTabs /> */}
       {/* <Home /> */}
       <Details 
-        courseCode="CS101"
-        courseName="Introduction to Computer Science"
+        courseCode="MBA6102"
+        courseName="MANAGERIAL ECONOMICS"
         present={8}
         absent={5}
       />

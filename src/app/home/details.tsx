@@ -94,12 +94,9 @@ export default function Details({
 
 
   return (
-    <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-    >
-        <View style={styles.container}>
+    <View style={styles.container}>
 
+        <View style={{flex:1, padding:20}}>
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity style={styles.headerButton}>
@@ -118,336 +115,355 @@ export default function Details({
 
             </View>
 
-            {/* Course Information */}
-            <View style={styles.courseCard}>
-                <View style={styles.courseTopRow}>
-                    <View style={styles.courseHeadingContainer}>
+            <ScrollView
+                style={styles.scrollView}
+                contentContainerStyle={styles.scrollContent}
+            >
 
-                        {/* <View style={styles.departmentRow}>
-                            <Text style={styles.departmentText}>DEPARTMENT OF CS</Text>
-                            <Text style={styles.dot}>•</Text>
-                            <Text style={styles.sectionText}>Section B</Text>
-                        </View> */}
-                        <Text style={styles.departmentText}>Course Name</Text>
-                        <View style={{height:4}} />
+                {/* Course Information */}
+                <View style={styles.courseCard}>
+                    <View style={styles.courseTopRow}>
+                        <View style={styles.courseHeadingContainer}>
 
-                        <Text style={styles.courseName}>{courseName}</Text>
+                            {/* <View style={styles.departmentRow}>
+                                <Text style={styles.departmentText}>DEPARTMENT OF CS</Text>
+                                <Text style={styles.dot}>•</Text>
+                                <Text style={styles.sectionText}>Section B</Text>
+                            </View> */}
+                            <Text style={styles.departmentText}>Course Name</Text>
+                            <View style={{height:4}} />
 
-                        {/* <Text style={styles.professorText}>♙  Prof. Sarah Jenkins • Hall 402</Text> */}
+                            <Text style={styles.courseName}>{courseName}</Text>
 
-                    </View>
+                            {/* <Text style={styles.professorText}>♙  Prof. Sarah Jenkins • Hall 402</Text> */}
 
-                    <View style={styles.targetBadge}>
-                        <Text style={styles.targetBadgeText}>Behind</Text>
-                        <Text style={styles.targetBadgeText}>Target</Text>
-                    </View>
-                </View>
+                        </View>
 
-
-                <View style={styles.courseDivider} />
-
-                <View style={styles.infoRow}>
-                    <View style={styles.infoIcon}>
-                        <Text style={styles.infoIconText}>i</Text>
-                    </View>
-
-                    // Info Text
-                    {
-                        classesNeeded > 0 ? (
-                            <Text style={styles.infoText}>
-                                Attend next{' '}
-                                <Text style={{color: '#19D19B', fontWeight: '800'}}>
-                                    {classesNeeded} class
-                                </Text>{' '}
-                                to reach target
-                            </Text>
-                        ) : classesCanMiss > 0 ? (
-                            <Text style={styles.infoText}>
-                                You can miss up to{' '}
-                                <Text style={{color: '#19D19B', fontWeight: '800'}}>
-                                    {classesCanMiss} class
-                                </Text>{' '}
-                                and still maintain target attendance
-                            </Text>
-                        ) : (
-                            <Text style={styles.infoText}>
-                                You are at your target attendance
-                            </Text>
-                        )
-                    }
-                </View>
-
-            </View>
-
-
-            <View style={styles.sectionSpacing} />
-
-
-            {/* Attendance */}
-            <View style={styles.attendanceCard}>
-                <Text style={styles.targetTitle}>Current Attendance</Text>
-                <View style={styles.ratioSection} />
-
-                {/* Top section */}
-                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
-                    {/* Percentage Circle */}
-                    <View style={styles.attendanceCircleWrapper}>
                         {
-                        present + absent === 0 ? (
-                            <Svg width={94} height={94}>
-                                <Circle
-                                    cx="47" cy="47" r={40}
-                                    stroke="#3A4354"
-                                    strokeWidth="7"
-                                    fill="none"
-                                />
-                            </Svg>
-                        ) : (
-                            <Svg
-                                width={94}
-                                height={94}
-                                viewBox="0 0 94 94"
-                                style={{ transform: [{ rotate: '-90deg' }] }}
-                            >
-                                {/* Green = Present */}
-                                <Circle
-                                    cx="47" cy="47" r={40}
-                                    stroke="#14C99A"
-                                    strokeWidth="7"
-                                    fill="none"
-                                    strokeDasharray={`${greenLength} ${circumference}`}
-                                    strokeDashoffset="0"
-                                    strokeLinecap="butt"
-                                />
+                            classesNeeded > 0 ? (
+                                <View style={[styles.targetBadge,{backgroundColor:'#32182A', borderColor:'#7A294A'}]}>
+                                    <Text style={[styles.targetBadgeText, {color: '#FF6C8B'}]}>Behind</Text>
+                                    <Text style={[styles.targetBadgeText, {color: '#FF6C8B'}]}>Target</Text>
+                                </View>
+                            ) : classesCanMiss > 0 ? (
+                                <View style={[styles.targetBadge,{backgroundColor:'#101F2D', borderColor:'#19D19B'}]}>
+                                    <Text style={[styles.targetBadgeText, {color: '#19D19B'}]}>Above</Text>
+                                    <Text style={[styles.targetBadgeText, {color: '#19D19B'}]}>Target</Text>
+                                </View>
+                            ) : (
+                                <View style={[styles.targetBadge,{backgroundColor:'#202004', borderColor:'#fffc4dd9'}]}>
+                                    <Text style={[styles.targetBadgeText, {color: '#fffc4dd9'}]}>Reached</Text>
+                                    <Text style={[styles.targetBadgeText, {color: '#fffc4dd9'}]}>Target</Text>
+                                </View>
+                            )
+                        }
+                    </View>
 
-                                {/* Red = Absent */}
-                                {attendanceRatio < 1 && (
+
+                    <View style={styles.courseDivider} />
+
+                    <View style={{flexDirection:'row', alignItems:'center'}}>
+                        <View style={styles.infoIcon}>
+                            <Text style={styles.infoIconText}>i</Text>
+                        </View>
+
+                        {/* Info Text */}
+                        {
+                            classesNeeded > 0 ? (
+                                <Text style={styles.infoText}>
+                                    Attend next{' '}
+                                    <Text style={{color: '#FF6C8B', fontWeight: '800'}}>
+                                        {classesNeeded} class
+                                    </Text>{' '}
+                                    to reach target
+                                </Text>
+                            ) : classesCanMiss > 0 ? (
+                                <Text style={styles.infoText}>
+                                    You can miss up to{' '}
+                                    <Text style={{color: '#19D19B', fontWeight: '800'}}>
+                                        {classesCanMiss} class
+                                    </Text>{' '}
+                                    and still maintain target attendance
+                                </Text>
+                            ) : (
+                                <Text style={styles.infoText}>
+                                    You are at your target attendance
+                                </Text>
+                            )
+                        }
+                    </View>
+                </View>
+
+
+                <View style={styles.sectionSpacing} />
+
+
+                {/* Attendance */}
+                <View style={styles.attendanceCard}>
+                    <Text style={styles.targetTitle}>Current Attendance</Text>
+                    <View style={styles.ratioSection} />
+
+                    {/* Top section */}
+                    <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                        {/* Percentage Circle */}
+                        <View style={styles.attendanceCircleWrapper}>
+                            {
+                            present + absent === 0 ? (
+                                <Svg width={94} height={94}>
                                     <Circle
                                         cx="47" cy="47" r={40}
-                                        stroke="#FF4668"
+                                        stroke="#3A4354"
                                         strokeWidth="7"
                                         fill="none"
-                                        strokeDasharray={`${redLength} ${circumference}`}
-                                        strokeDashoffset={-greenLength}
+                                    />
+                                </Svg>
+                            ) : (
+                                <Svg
+                                    width={94}
+                                    height={94}
+                                    viewBox="0 0 94 94"
+                                    style={{ transform: [{ rotate: '-90deg' }] }}
+                                >
+                                    {/* Green = Present */}
+                                    <Circle
+                                        cx="47" cy="47" r={40}
+                                        stroke="#14C99A"
+                                        strokeWidth="7"
+                                        fill="none"
+                                        strokeDasharray={`${greenLength} ${circumference}`}
+                                        strokeDashoffset="0"
                                         strokeLinecap="butt"
                                     />
-                                )}
-                            </Svg>
-                        )}
 
-                        <View style={styles.attendanceCircleInner}>
-                            <Text style={styles.attendancePercentage}>
-                                {attendancePercentage}%
-                            </Text>
+                                    {/* Red = Absent */}
+                                    {attendanceRatio < 1 && (
+                                        <Circle
+                                            cx="47" cy="47" r={40}
+                                            stroke="#FF4668"
+                                            strokeWidth="7"
+                                            fill="none"
+                                            strokeDasharray={`${redLength} ${circumference}`}
+                                            strokeDashoffset={-greenLength}
+                                            strokeLinecap="butt"
+                                        />
+                                    )}
+                                </Svg>
+                            )}
+
+                            <View style={styles.attendanceCircleInner}>
+                                <Text style={styles.attendancePercentage}>
+                                    {attendancePercentage}%
+                                </Text>
+                            </View>
+                        </View>
+
+
+                        {/* Total classes */}
+                        {/* <View style={styles.totalClassesContainer}>
+                            <Text style={styles.totalLabel}>TOTAL</Text>
+                            <Text style={styles.totalLabel}>CLASSES</Text>
+
+                            <View style={styles.totalNumberRow}>
+                                <Text style={styles.totalNumber}>{present + absent}</Text>
+                                <Text style={styles.heldText}>held</Text>
+                            </View>
+
+                            <Text style={styles.minimumText}>Min. required:</Text>
+                            <Text style={styles.minimumPercentage}>75%</Text>
+
+                        </View> */}
+
+
+                        {/* Present / Absent */}
+                        <View style={{flex:0.5, gap:10, flexShrink:1}}>
+                            {/* Present */}
+                            <View style={styles.statPresent}>
+                                <View style={styles.statDotPresent} />
+                                <Text style={styles.statTextPresent}>Present</Text>
+                                <Text style={styles.statNumberPresent}>{present}</Text>
+                            </View>
+
+                            {/* Absent */}
+                            <View style={styles.statAbsent}>
+                                <View style={styles.statDotAbsent} />
+                                <Text style={styles.statTextAbsent}>Absent</Text>
+                                <Text style={styles.statNumberAbsent}>{absent}</Text>
+                            </View>
                         </View>
                     </View>
 
 
-                    {/* Total classes */}
-                    {/* <View style={styles.totalClassesContainer}>
-                        <Text style={styles.totalLabel}>TOTAL</Text>
-                        <Text style={styles.totalLabel}>CLASSES</Text>
-
-                        <View style={styles.totalNumberRow}>
-                            <Text style={styles.totalNumber}>{present + absent}</Text>
-                            <Text style={styles.heldText}>held</Text>
+                    {/* Ratio distribution */}
+                    <View style={styles.ratioSection}>
+                        <View style={styles.ratioHeader}>
+                            <Text style={styles.ratioTitle}>Ratio Distribution</Text>
+                            <Text style={styles.ratioNumbers}>{present} P / {absent} A</Text>
                         </View>
 
-                        <Text style={styles.minimumText}>Min. required:</Text>
-                        <Text style={styles.minimumPercentage}>75%</Text>
-
-                    </View> */}
-
-
-                    {/* Present / Absent */}
-                    <View style={{flex:0.5, gap:10, flexShrink:1}}>
-                        {/* Present */}
-                        <View style={styles.statPresent}>
-                            <View style={styles.statDotPresent} />
-                            <Text style={styles.statTextPresent}>Present</Text>
-                            <Text style={styles.statNumberPresent}>{present}</Text>
-                        </View>
-
-                        {/* Absent */}
-                        <View style={styles.statAbsent}>
-                            <View style={styles.statDotAbsent} />
-                            <Text style={styles.statTextAbsent}>Absent</Text>
-                            <Text style={styles.statNumberAbsent}>{absent}</Text>
-                        </View>
-                    </View>
-                </View>
-
-
-                {/* Ratio distribution */}
-                <View style={styles.ratioSection}>
-                    <View style={styles.ratioHeader}>
-                        <Text style={styles.ratioTitle}>Ratio Distribution</Text>
-                        <Text style={styles.ratioNumbers}>{present} P / {absent} A</Text>
-                    </View>
-
-                    <View style={styles.ratioBar}>
-                        <View style={[styles.ratioPresent,{flex:present + absent === 0 ? 0: present}]} />
-                        <View style={[styles.ratioAbsent,{flex:present + absent === 0 ? 0: absent}]} />
-                    </View>
-                </View>
-            </View>
-
-            <View style={styles.sectionSpacing} />
-
-            {/* Target Attendance */}
-            <View style={styles.targetCard}>
-                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
-                    <Text style={styles.targetTitle}>Target Attendance</Text>
-                    <Text style={styles.targetValue}>{targetAttendance}%</Text>
-                </View>
-
-                <Slider
-                    style={styles.targetSlider}
-                    minimumValue={50}
-                    maximumValue={100}
-                    step={5}
-                    value={targetAttendance}
-                    onValueChange={(value) => setTargetAttendance(value)}
-                    minimumTrackTintColor="#14C99A"
-                    maximumTrackTintColor="#3A4354"
-                    thumbTintColor="#FFFFFF"
-                />
-
-                <View style={styles.targetScale}>
-                    <Text style={styles.targetScaleText}>50%</Text>
-                    <Text style={styles.targetScaleText}>75% (College Req)</Text>
-                    <Text style={styles.targetScaleText}>100%</Text>
-                </View>
-            </View>
-
-            <View style={styles.sectionSpacing} />
-
-            {/* Attendance Simulator */}
-            <View style={styles.attendanceCard}>
-                <View style={styles.simulatorHeader}>
-                    <View style={styles.simulatorTitleRow}>
-                        <View style={styles.simulatorIcon}>
-                            <Text style={styles.simulatorIconText}>▣</Text>
-                        </View>
-
-                        <Text style={styles.simulatorTitle}>Attendance Simulator</Text>
-                    </View>
-
-                    <TouchableOpacity onPress={() => ResetSimulator()}>
-                        <Text style={styles.resetText}>Reset</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.ratioSection} />
-
-                <View style={styles.simulatorCards}>
-                    {/* Attend */}
-                    <View style={[styles.simulatorCard, { borderColor: '#075C51', backgroundColor: '#101F2D' }]}>
-                        <Text style={[styles.simulatorCardTitle, { color: '#3BD5A7' }]}>✓ Attend Next</Text>
-
-                        <Text style={styles.simulatorCount}>{presentCount}</Text>
-
-                        <View style={styles.counterRow}>
-                            <TouchableOpacity
-                                style={styles.counterMinus}
-                                onPress={() => PresentCountDecrement() }
-                                disabled={presentCount === 0}
-                            >
-                                <Text style={styles.counterText}>-</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                style={[styles.counterPlus, { backgroundColor: '#10C994' }]}
-                                onPress={() => PresentCountIncrement() }
-                            >
-                                <Text style={styles.counterText}>+</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                    </View>
-
-                    {/* Miss */}
-                    <View style={[styles.simulatorCard, { borderColor: '#63233E', backgroundColor: '#201827' }]}>
-                        <Text style={[styles.simulatorCardTitle, { color: '#FF6682' }]}>× Miss / Bunk</Text>
-                        <Text style={styles.simulatorCount}>{absentCount}</Text>
-                        
-                        <View style={styles.counterRow}>
-                            <TouchableOpacity
-                                style={styles.counterMinus}
-                                onPress={() => AbsentCountDecrement() }
-                                disabled={absentCount === 0}
-                            >
-                                <Text style={styles.counterText}>-</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                style={[styles.counterPlus, { backgroundColor: '#FF4D4D' }]}
-                                onPress={() => AbsentCountIncrement()}
-                            >
-                                <Text style={styles.counterText}>+</Text>
-                            </TouchableOpacity>
+                        <View style={styles.ratioBar}>
+                            <View style={[styles.ratioPresent,{flex:present + absent === 0 ? 0: present}]} />
+                            <View style={[styles.ratioAbsent,{flex:present + absent === 0 ? 0: absent}]} />
                         </View>
                     </View>
                 </View>
 
                 <View style={styles.sectionSpacing} />
 
-                {/* Projected Attendance */}
-                <View style={[styles.projectedCard, { backgroundColor: projectedCardColor }]}>
-                    {/* Header */}
-                    <View style={styles.projectedHeader}>
-                        <View>
-                            <Text style={styles.projectedTitle}>PROJECTED ATTENDANCE</Text>
-                            {
-                                targetAttendance - (presentCount + present) / (present + absent + presentCount + absentCount) * 100 > 0 ? (
-                                    <Text style={styles.belowTarget}>
-                                        •&nbsp;
-                                        {belowTagetAttendance}
-                                        % below target
-                                    </Text>
-                                ) : null
-                            }
-                        </View>
-
-                        <Text style={{ fontSize: 32, fontWeight: 'bold', color: projectedAttendanceColor }}>{projectedAttendance}%</Text>
+                {/* Target Attendance */}
+                <View style={styles.targetCard}>
+                    <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                        <Text style={styles.targetTitle}>Target Attendance</Text>
+                        <Text style={styles.targetValue}>{targetAttendance}%</Text>
                     </View>
 
+                    <Slider
+                        style={styles.targetSlider}
+                        minimumValue={50}
+                        maximumValue={100}
+                        step={5}
+                        value={targetAttendance}
+                        onValueChange={(value) => setTargetAttendance(value)}
+                        minimumTrackTintColor="#14C99A"
+                        maximumTrackTintColor="#3A4354"
+                        thumbTintColor="#FFFFFF"
+                    />
 
-                    {/* Projection Bar */}
-                    <View style={{marginVertical: 14}}>
-                        <View style={styles.projectedBar}>
-                            <View style={[styles.projectedBarFill,{ width: `${projectedAttendanceBarWidth}%`, backgroundColor: projectedAttendanceColor }]} />
+                    <View style={styles.targetScale}>
+                        <Text style={styles.targetScaleText}>50%</Text>
+                        <Text style={styles.targetScaleText}>75% (College Req)</Text>
+                        <Text style={styles.targetScaleText}>100%</Text>
+                    </View>
+                </View>
 
-                            {/* Target Attendance marker */}
-                            <View style={[styles.targetMarker,{left: `${targetAttendance}%`}]}/>
+                <View style={styles.sectionSpacing} />
+
+                {/* Attendance Simulator */}
+                <View style={styles.attendanceCard}>
+                    <View style={styles.simulatorHeader}>
+                        <View style={styles.simulatorTitleRow}>
+                            <View style={styles.simulatorIcon}>
+                                <Text style={styles.simulatorIconText}>▣</Text>
+                            </View>
+
+                            <Text style={styles.simulatorTitle}>Attendance Simulator</Text>
+                        </View>
+
+                        <TouchableOpacity onPress={() => ResetSimulator()}>
+                            <Text style={styles.resetText}>Reset</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.ratioSection} />
+
+                    <View style={styles.simulatorCards}>
+                        {/* Attend */}
+                        <View style={[styles.simulatorCard, { borderColor: '#075C51', backgroundColor: '#101F2D' }]}>
+                            <Text style={[styles.simulatorCardTitle, { color: '#3BD5A7' }]}>✓ Attend Next</Text>
+
+                            <Text style={styles.simulatorCount}>{presentCount}</Text>
+
+                            <View style={styles.counterRow}>
+                                <TouchableOpacity
+                                    style={styles.counterMinus}
+                                    onPress={() => PresentCountDecrement() }
+                                    disabled={presentCount === 0}
+                                >
+                                    <Text style={styles.counterText}>-</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={[styles.counterPlus, { backgroundColor: '#10C994' }]}
+                                    onPress={() => PresentCountIncrement() }
+                                >
+                                    <Text style={styles.counterText}>+</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+
+                        {/* Miss */}
+                        <View style={[styles.simulatorCard, { borderColor: '#63233E', backgroundColor: '#201827' }]}>
+                            <Text style={[styles.simulatorCardTitle, { color: '#FF6682' }]}>× Miss / Bunk</Text>
+                            <Text style={styles.simulatorCount}>{absentCount}</Text>
+                            
+                            <View style={styles.counterRow}>
+                                <TouchableOpacity
+                                    style={styles.counterMinus}
+                                    onPress={() => AbsentCountDecrement() }
+                                    disabled={absentCount === 0}
+                                >
+                                    <Text style={styles.counterText}>-</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={[styles.counterPlus, { backgroundColor: '#FF4D4D' }]}
+                                    onPress={() => AbsentCountIncrement()}
+                                >
+                                    <Text style={styles.counterText}>+</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
 
+                    <View style={styles.sectionSpacing} />
 
-                    {/* Projected Numbers */}
-                    <View style={styles.projectedStats}>
-                        {/* Present */}
-                        <View style={[styles.projectedBox, { borderColor: '#075C51', backgroundColor: '#102B32' }]}>
-                            <Text style={[styles.projectedNumberText, { color: '#25D3A3'}]}>{present + presentCount}</Text>
-                            <Text style={styles.projectedLabel}>PRESENT</Text>
+                    {/* Projected Attendance */}
+                    <View style={[styles.projectedCard, { backgroundColor: projectedCardColor }]}>
+                        {/* Header */}
+                        <View style={styles.projectedHeader}>
+                            <View>
+                                <Text style={styles.projectedTitle}>PROJECTED ATTENDANCE</Text>
+                                {
+                                    targetAttendance - (presentCount + present) / (present + absent + presentCount + absentCount) * 100 > 0 ? (
+                                        <Text style={styles.belowTarget}>
+                                            •&nbsp;
+                                            {belowTagetAttendance}
+                                            % below target
+                                        </Text>
+                                    ) : null
+                                }
+                            </View>
+
+                            <Text style={{ fontSize: 32, fontWeight: 'bold', color: projectedAttendanceColor }}>{projectedAttendance}%</Text>
                         </View>
 
-                        {/* Absent */}
-                        <View style={[styles.projectedBox, { borderColor: '#63233E', backgroundColor: '#2B1C2D' }]}>
-                            <Text style={[styles.projectedNumberText, { color: '#FF6682' }]}>{absent + absentCount}</Text>
-                            <Text style={styles.projectedLabel}>ABSENT</Text>
+
+                        {/* Projection Bar */}
+                        <View style={{marginVertical: 14}}>
+                            <View style={styles.projectedBar}>
+                                <View style={[styles.projectedBarFill,{ width: `${projectedAttendanceBarWidth}%`, backgroundColor: projectedAttendanceColor }]} />
+
+                                {/* Target Attendance marker */}
+                                <View style={[styles.targetMarker,{left: `${targetAttendance}%`}]}/>
+                            </View>
                         </View>
 
-                        {/* Total */}
-                        <View style={[styles.projectedBox, { borderColor: '#344158', backgroundColor: '#1B2638' }]}>
-                            <Text style={[styles.projectedNumberText, { color: '#FFFFFF' }]}>{present + presentCount + absent + absentCount}</Text>
-                            <Text style={styles.projectedLabel}>TOTAL</Text>
+
+                        {/* Projected Numbers */}
+                        <View style={styles.projectedStats}>
+                            {/* Present */}
+                            <View style={[styles.projectedBox, { borderColor: '#075C51', backgroundColor: '#102B32' }]}>
+                                <Text style={[styles.projectedNumberText, { color: '#25D3A3'}]}>{present + presentCount}</Text>
+                                <Text style={styles.projectedLabel}>PRESENT</Text>
+                            </View>
+
+                            {/* Absent */}
+                            <View style={[styles.projectedBox, { borderColor: '#63233E', backgroundColor: '#2B1C2D' }]}>
+                                <Text style={[styles.projectedNumberText, { color: '#FF6682' }]}>{absent + absentCount}</Text>
+                                <Text style={styles.projectedLabel}>ABSENT</Text>
+                            </View>
+
+                            {/* Total */}
+                            <View style={[styles.projectedBox, { borderColor: '#344158', backgroundColor: '#1B2638' }]}>
+                                <Text style={[styles.projectedNumberText, { color: '#FFFFFF' }]}>{present + presentCount + absent + absentCount}</Text>
+                                <Text style={styles.projectedLabel}>TOTAL</Text>
+                            </View>
                         </View>
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </View>
-    </ScrollView>
+    </View>
   )
 }
 
@@ -463,8 +479,10 @@ const styles = StyleSheet.create({
     },
 
     container: {
-        marginTop: 20,
-        marginHorizontal: 20,
+        flex: 1,
+        backgroundColor: '#07101F',
+        // marginTop: 20,
+        // marginHorizontal: 20,
     },
 
     // Header
@@ -473,7 +491,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 20,
+        marginBottom: 10,
     },
 
     headerButton: {
@@ -541,7 +559,7 @@ const styles = StyleSheet.create({
     courseTopRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        alignItems: 'center',
     },
 
     courseHeadingContainer: {
@@ -587,17 +605,14 @@ const styles = StyleSheet.create({
     },
 
     targetBadge: {
-        backgroundColor: '#32182A',
         borderWidth: 1,
-        borderColor: '#7A294A',
-        borderRadius: 22,
-        paddingHorizontal: 13,
+        borderRadius: 12,
+        paddingHorizontal: 12,
         paddingVertical: 8,
         alignItems: 'center',
     },
 
     targetBadgeText: {
-        color: '#FF6C8B',
         fontSize: 13,
         fontWeight: '800',
     },
@@ -608,18 +623,13 @@ const styles = StyleSheet.create({
         marginVertical: 18,
     },
 
-    infoRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-
     infoIcon: {
         width: 28,
         height: 28,
         borderRadius: 9,
         backgroundColor: '#292C29',
-        borderWidth: 1,
         borderColor: '#665B27',
+        borderWidth: 1,
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 10,

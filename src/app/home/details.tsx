@@ -18,7 +18,6 @@ export default function Details({
     absent
 }: DetailsProps) {
 
-    const [width, setWidth] = useState(0);
     const [presentCount, setPresentCount] = useState(0);
     const [absentCount, setAbsentCount] = useState(0);
     const [targetAttendance, setTargetAttendance] = useState(70);
@@ -29,6 +28,70 @@ export default function Details({
     const circumference = 2 * Math.PI * 40;
     const greenLength = circumference * attendanceRatio;
     const redLength = circumference * (1 - attendanceRatio);
+
+    // Classes need to attend to reach target attendance
+    const totalClasses = present + absent; 
+    const classesNeeded = 
+        targetAttendance >= 100 ? absent > 0 ? Infinity : 0 : Math.max( 0, Math.ceil( ( targetAttendance * totalClasses - 100 * present ) / (100 - targetAttendance)));
+
+    // Classes can miss to stay at target attendance
+    const classesCanMiss = 
+        targetAttendance === 0 ? Infinity : Math.max( 0, Math.floor( (100 * present) / targetAttendance - totalClasses ) );
+
+
+    const PresentCountIncrement = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        setPresentCount(presentCount + 1);
+    }
+    const PresentCountDecrement = () => {
+        if (presentCount > 0) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            setPresentCount(presentCount - 1);
+        }
+    }
+    const AbsentCountIncrement = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        setAbsentCount(absentCount + 1);
+    }
+    const AbsentCountDecrement = () => {
+        if (absentCount > 0) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            setAbsentCount(absentCount - 1);
+        }
+    }    
+    const ResetSimulator = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        setPresentCount(0);
+        setAbsentCount(0);
+    }
+
+
+    // Projected Attendance Width
+    const projectedAttendanceBarWidth =
+        presentCount + absentCount === 0 ? (
+            present + absent === 0? 0: Math.round((present /(present + absent)) *100)
+        ) : Math.round(((presentCount + present) / (present + absent + presentCount + absentCount)) * 100)
+
+
+    // Attendance 
+    const projectedAttendance = 
+        presentCount + absentCount === 0 ? (
+            present + absent === 0 ? 0 : Math.round((present / (present + absent)) * 100)
+        ) : Math.round(((presentCount + present) / (present + absent + presentCount + absentCount)) * 100)
+    const belowTagetAttendance = 
+        targetAttendance - (presentCount + present) / (present + absent + presentCount + absentCount) * 100 > 0 ? (
+            Math.round(targetAttendance - ((presentCount + present) / (present + absent + presentCount + absentCount) * 100))
+        ) : 0
+
+
+    // Projected Attendance Colors
+    const projectedCardColor = `${
+        (presentCount + present) / (present + absent + presentCount + absentCount) * 100 >= 60 && (presentCount + present) / (present + absent + presentCount + absentCount) * 100 < 80 ? '#202004' : (presentCount + present) / (present + absent + presentCount + absentCount) * 100 >= 80 ? '#101F2D' : '#201827'
+    }`
+    const projectedAttendanceColor = `${
+        (presentCount + present) / (present + absent + presentCount + absentCount) * 100 >= 60 && (presentCount + present) / (present + absent + presentCount + absentCount) * 100 < 80 ? '#fffc4dd9' : (presentCount + present) / (present + absent + presentCount + absentCount) * 100 >= 80 ? '#14C99A' : '#FF4D65'
+    }`
+
 
   return (
     <ScrollView
@@ -60,28 +123,24 @@ export default function Details({
                 <View style={styles.courseTopRow}>
                     <View style={styles.courseHeadingContainer}>
 
-                        <View style={styles.departmentRow}>
+                        {/* <View style={styles.departmentRow}>
                             <Text style={styles.departmentText}>DEPARTMENT OF CS</Text>
                             <Text style={styles.dot}>•</Text>
                             <Text style={styles.sectionText}>Section B</Text>
-                        </View>
+                        </View> */}
+                        <Text style={styles.departmentText}>Course Name</Text>
+                        <View style={{height:4}} />
 
                         <Text style={styles.courseName}>{courseName}</Text>
 
-                        <Text style={styles.professorText}>♙  Prof. Sarah Jenkins • Hall 402</Text>
+                        {/* <Text style={styles.professorText}>♙  Prof. Sarah Jenkins • Hall 402</Text> */}
 
                     </View>
 
                     <View style={styles.targetBadge}>
-                        <Text style={styles.targetBadgeText}>
-                            Behind
-                        </Text>
-
-                        <Text style={styles.targetBadgeText}>
-                            Target
-                        </Text>
+                        <Text style={styles.targetBadgeText}>Behind</Text>
+                        <Text style={styles.targetBadgeText}>Target</Text>
                     </View>
-
                 </View>
 
 
@@ -89,18 +148,33 @@ export default function Details({
 
                 <View style={styles.infoRow}>
                     <View style={styles.infoIcon}>
-                        <Text style={styles.infoIconText}>
-                            i
-                        </Text>
+                        <Text style={styles.infoIconText}>i</Text>
                     </View>
 
-                    <Text style={styles.infoText}>
-                        Attend next{' '}
-                        <Text style={styles.infoHighlight}>
-                            7 consecutive classes
-                        </Text>{' '}
-                        to reach 75%
-                    </Text>
+                    // Info Text
+                    {
+                        classesNeeded > 0 ? (
+                            <Text style={styles.infoText}>
+                                Attend next{' '}
+                                <Text style={{color: '#19D19B', fontWeight: '800'}}>
+                                    {classesNeeded} class
+                                </Text>{' '}
+                                to reach target
+                            </Text>
+                        ) : classesCanMiss > 0 ? (
+                            <Text style={styles.infoText}>
+                                You can miss up to{' '}
+                                <Text style={{color: '#19D19B', fontWeight: '800'}}>
+                                    {classesCanMiss} class
+                                </Text>{' '}
+                                and still maintain target attendance
+                            </Text>
+                        ) : (
+                            <Text style={styles.infoText}>
+                                You are at your target attendance
+                            </Text>
+                        )
+                    }
                 </View>
 
             </View>
@@ -244,190 +318,131 @@ export default function Details({
                     <Text style={styles.targetScaleText}>75% (College Req)</Text>
                     <Text style={styles.targetScaleText}>100%</Text>
                 </View>
-
             </View>
 
             <View style={styles.sectionSpacing} />
 
             {/* Attendance Simulator */}
-            <View style={styles.simulatorHeader}>
-                <View style={styles.simulatorTitleRow}>
-                    <View style={styles.simulatorIcon}>
-                        <Text style={styles.simulatorIconText}>▣</Text>
+            <View style={styles.attendanceCard}>
+                <View style={styles.simulatorHeader}>
+                    <View style={styles.simulatorTitleRow}>
+                        <View style={styles.simulatorIcon}>
+                            <Text style={styles.simulatorIconText}>▣</Text>
+                        </View>
+
+                        <Text style={styles.simulatorTitle}>Attendance Simulator</Text>
                     </View>
 
-                    <Text style={styles.simulatorTitle}>Attendance Simulator</Text>
+                    <TouchableOpacity onPress={() => ResetSimulator()}>
+                        <Text style={styles.resetText}>Reset</Text>
+                    </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity
-                    onPress={() => {
-                        setPresentCount(0);
-                        setAbsentCount(0);
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    }}
-                >
-                    <Text style={styles.resetText}>Reset</Text>
-                </TouchableOpacity>
-            </View>
+                <View style={styles.ratioSection} />
 
+                <View style={styles.simulatorCards}>
+                    {/* Attend */}
+                    <View style={[styles.simulatorCard, { borderColor: '#075C51', backgroundColor: '#101F2D' }]}>
+                        <Text style={[styles.simulatorCardTitle, { color: '#3BD5A7' }]}>✓ Attend Next</Text>
 
-            <View style={styles.simulatorCards}>
-                {/* Attend */}
-                <View style={styles.simulatorCardAttend}>
-                    <Text style={styles.simulatorCardTitleAttend}>✓ Attend Next</Text>
+                        <Text style={styles.simulatorCount}>{presentCount}</Text>
 
-                    <Text style={styles.simulatorCount}>{presentCount}</Text>
+                        <View style={styles.counterRow}>
+                            <TouchableOpacity
+                                style={styles.counterMinus}
+                                onPress={() => PresentCountDecrement() }
+                                disabled={presentCount === 0}
+                            >
+                                <Text style={styles.counterText}>-</Text>
+                            </TouchableOpacity>
 
-                    <View style={styles.counterRow}>
-                        <TouchableOpacity
-                            style={styles.counterMinus}
-                            onPress={() => {
-                                if (presentCount > 0) {
-                                    setPresentCount(presentCount - 1);
-                                    Haptics.impactAsync(
-                                        Haptics.ImpactFeedbackStyle.Light
-                                    );
-                                }
-                            }}
-                            disabled={presentCount === 0}
-                        >
-                            <Text style={styles.counterMinusText}>-</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.counterPlus, { backgroundColor: '#10C994' }]}
+                                onPress={() => PresentCountIncrement() }
+                            >
+                                <Text style={styles.counterText}>+</Text>
+                            </TouchableOpacity>
+                        </View>
 
-                        <TouchableOpacity
-                            style={styles.counterPlusAttend}
-                            onPress={() => {
-                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                                setPresentCount(presentCount + 1);
-                            }}
-                        >
-                            <Text style={styles.counterPlusText}>+</Text>
-                        </TouchableOpacity>
                     </View>
 
-                </View>
+                    {/* Miss */}
+                    <View style={[styles.simulatorCard, { borderColor: '#63233E', backgroundColor: '#201827' }]}>
+                        <Text style={[styles.simulatorCardTitle, { color: '#FF6682' }]}>× Miss / Bunk</Text>
+                        <Text style={styles.simulatorCount}>{absentCount}</Text>
+                        
+                        <View style={styles.counterRow}>
+                            <TouchableOpacity
+                                style={styles.counterMinus}
+                                onPress={() => AbsentCountDecrement() }
+                                disabled={absentCount === 0}
+                            >
+                                <Text style={styles.counterText}>-</Text>
+                            </TouchableOpacity>
 
-                {/* Miss */}
-                <View style={styles.simulatorCardMiss}>
-                    <Text style={styles.simulatorCardTitleMiss}>× Miss / Bunk</Text>
-                    <Text style={styles.simulatorCount}>{absentCount}</Text>
-                    
-                    <View style={styles.counterRow}>
-                        <TouchableOpacity
-                            style={styles.counterMinus}
-                            onPress={() => {
-                                if (absentCount > 0) {
-                                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                                    setAbsentCount(absentCount - 1);
-                                }
-                            }}
-                            disabled={absentCount === 0}
-                        >
-                            <Text style={styles.counterMinusText}>-</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={styles.counterPlusMiss}
-                            onPress={() => {
-                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                                setAbsentCount(absentCount + 1);
-                            }}
-                        >
-                            <Text style={styles.counterPlusText}>+</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.counterPlus, { backgroundColor: '#FF4D4D' }]}
+                                onPress={() => AbsentCountIncrement()}
+                            >
+                                <Text style={styles.counterText}>+</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
 
+                <View style={styles.sectionSpacing} />
 
-            <View style={styles.sectionSpacing} />
+                {/* Projected Attendance */}
+                <View style={[styles.projectedCard, { backgroundColor: projectedCardColor }]}>
+                    {/* Header */}
+                    <View style={styles.projectedHeader}>
+                        <View>
+                            <Text style={styles.projectedTitle}>PROJECTED ATTENDANCE</Text>
+                            {
+                                targetAttendance - (presentCount + present) / (present + absent + presentCount + absentCount) * 100 > 0 ? (
+                                    <Text style={styles.belowTarget}>
+                                        •&nbsp;
+                                        {belowTagetAttendance}
+                                        % below target
+                                    </Text>
+                                ) : null
+                            }
+                        </View>
 
-
-            {/* Projected Attendance */}
-            <View style={styles.projectedCard}>
-                {/* Header */}
-                <View style={styles.projectedHeader}>
-                    <View >
-                        <Text style={styles.projectedTitle}>PROJECTED ATTENDANCE</Text>
-                        {
-                            targetAttendance - (presentCount + present) / (present + absent + presentCount + absentCount) * 100 > 0 ? (
-                                <Text style={styles.belowTarget}>
-                                    •&nbsp;
-                                    {
-                                        targetAttendance - (presentCount + present) / (present + absent + presentCount + absentCount) * 100 > 0 ? (
-                                            Math.round(targetAttendance - ((presentCount + present) / (present + absent + presentCount + absentCount) * 100))
-                                        )
-                                        : 0
-                                    }
-                                    % below target</Text>
-                            ) : null
-                        }
+                        <Text style={{ fontSize: 32, fontWeight: 'bold', color: projectedAttendanceColor }}>{projectedAttendance}%</Text>
                     </View>
 
-                    <Text style={styles.projectedPercentage}>
-                    {
-                        presentCount + absentCount === 0 ? (
-                            present + absent === 0 ? 0 : Math.round((present / (present + absent)) * 100)
-                        )
-                        : Math.round(((presentCount + present) / (present + absent + presentCount + absentCount)) * 100)
-                    }%
-                </Text>
 
-                </View>
+                    {/* Projection Bar */}
+                    <View style={{marginVertical: 14}}>
+                        <View style={styles.projectedBar}>
+                            <View style={[styles.projectedBarFill,{ width: `${projectedAttendanceBarWidth}%`, backgroundColor: projectedAttendanceColor }]} />
 
-
-                {/* Projection Bar */}
-
-                <View style={styles.projectedBarContainer}>
-                    <View style={styles.projectedBar}>
-                        <View
-                            style={[
-                                styles.projectedBarFill,
-                                {
-                                    width: `${
-                                        presentCount + absentCount === 0 ? (
-                                            present + absent === 0? 0: Math.round((present /(present + absent)) *100)
-                                        )
-                                        : Math.round(((presentCount + present) / (present + absent + presentCount + absentCount)) * 100)
-                                    }%`,
-                                },
-                            ]}
-                        />
-
-                        {/* Target marker */}
-                        <View
-                            style={[
-                                styles.targetMarker,
-                                {
-                                    left: `${targetAttendance}%`,
-                                },
-                            ]}
-                        />
-
+                            {/* Target Attendance marker */}
+                            <View style={[styles.targetMarker,{left: `${targetAttendance}%`}]}/>
+                        </View>
                     </View>
 
-                </View>
 
+                    {/* Projected Numbers */}
+                    <View style={styles.projectedStats}>
+                        {/* Present */}
+                        <View style={[styles.projectedBox, { borderColor: '#075C51', backgroundColor: '#102B32' }]}>
+                            <Text style={[styles.projectedNumberText, { color: '#25D3A3'}]}>{present + presentCount}</Text>
+                            <Text style={styles.projectedLabel}>PRESENT</Text>
+                        </View>
 
-                {/* Projected Numbers */}
+                        {/* Absent */}
+                        <View style={[styles.projectedBox, { borderColor: '#63233E', backgroundColor: '#2B1C2D' }]}>
+                            <Text style={[styles.projectedNumberText, { color: '#FF6682' }]}>{absent + absentCount}</Text>
+                            <Text style={styles.projectedLabel}>ABSENT</Text>
+                        </View>
 
-                <View style={styles.projectedStats}>
-                    {/* Present */}
-                    <View style={styles.projectedPresentBox}>
-                        <Text style={styles.projectedNumberPresent}>{present + presentCount}</Text>
-                        <Text style={styles.projectedLabel}>PRESENT</Text>
-                    </View>
-
-                    {/* Absent */}
-                    <View style={styles.projectedAbsentBox}>
-                        <Text style={styles.projectedNumberAbsent}>{absent + absentCount}</Text>
-                        <Text style={styles.projectedLabel}>ABSENT</Text>
-                    </View>
-
-                    {/* Total */}
-                    <View style={styles.projectedTotalBox}>
-                        <Text style={styles.projectedNumberTotal}>{present +presentCount +absent +absentCount}</Text>
-                        <Text style={styles.projectedLabel}>TOTAL</Text>
+                        {/* Total */}
+                        <View style={[styles.projectedBox, { borderColor: '#344158', backgroundColor: '#1B2638' }]}>
+                            <Text style={[styles.projectedNumberText, { color: '#FFFFFF' }]}>{present + presentCount + absent + absentCount}</Text>
+                            <Text style={styles.projectedLabel}>TOTAL</Text>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -520,7 +535,7 @@ const styles = StyleSheet.create({
         borderRadius: 28,
         borderWidth: 1,
         borderColor: '#26334A',
-        padding: 24,
+        padding: 20,
     },
 
     courseTopRow: {
@@ -623,11 +638,6 @@ const styles = StyleSheet.create({
         lineHeight: 20,
     },
 
-    infoHighlight: {
-        color: '#19D19B',
-        fontWeight: '800',
-    },
-
     sectionSpacing: {
         height: 22,
     },
@@ -642,7 +652,7 @@ const styles = StyleSheet.create({
         borderRadius: 28,
         borderWidth: 1,
         borderColor: '#26334A',
-        padding: 24,
+        padding: 20,
     },
 
     attendanceTop: {
@@ -893,7 +903,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 14,
     },
 
     simulatorTitleRow: {
@@ -933,39 +942,18 @@ const styles = StyleSheet.create({
     simulatorCards: {
         flexDirection: 'row',
         gap: 14,
+        marginTop: 8,
     },
 
-    simulatorCardAttend: {
+    simulatorCard: {
         flex: 1,
-        minWidth: 0,
-        backgroundColor: '#101F2D',
         borderWidth: 1,
-        borderColor: '#075C51',
         borderRadius: 20,
         padding: 18,
         alignItems: 'center',
     },
 
-    simulatorCardMiss: {
-        flex: 1,
-        minWidth: 0,
-        backgroundColor: '#201827',
-        borderWidth: 1,
-        borderColor: '#63233E',
-        borderRadius: 20,
-        padding: 18,
-        alignItems: 'center',
-    },
-
-    simulatorCardTitleAttend: {
-        color: '#3BD5A7',
-        fontSize: 13,
-        fontWeight: '800',
-        marginBottom: 14,
-    },
-
-    simulatorCardTitleMiss: {
-        color: '#FF6682',
+    simulatorCardTitle: {
         fontSize: 13,
         fontWeight: '800',
         marginBottom: 14,
@@ -996,13 +984,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
-    counterMinusText: {
-        color: '#FFFFFF',
-        fontSize: 20,
-        fontWeight: '800',
-    },
-
-    counterPlusAttend: {
+    counterPlus: {
         width: 40,
         height: 40,
         borderRadius: 13,
@@ -1014,13 +996,13 @@ const styles = StyleSheet.create({
     counterPlusMiss: {
         width: 40,
         height: 40,
-        borderRadius: 13,
+        borderRadius: 12,
         backgroundColor: '#FF4668',
         alignItems: 'center',
         justifyContent: 'center',
     },
 
-    counterPlusText: {
+    counterText: {
         color: '#FFFFFF',
         fontSize: 20,
         fontWeight: '800',
@@ -1028,12 +1010,10 @@ const styles = StyleSheet.create({
 
 
     projectedCard: {
-        backgroundColor: '#121C2D',
         borderRadius: 20,
         borderWidth: 1,
         borderColor: '#344158',
         padding: 20,
-        marginTop: 2,
     },
 
     projectedHeader: {
@@ -1044,7 +1024,7 @@ const styles = StyleSheet.create({
 
     projectedTitle: {
         color: '#9BA7B9',
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: '800',
         letterSpacing: 0.7,
     },
@@ -1054,17 +1034,6 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: '700',
         marginTop: 5,
-    },
-
-    projectedPercentage: {
-        color: '#FF6682',
-        fontSize: 32,
-        fontWeight: '900',
-    },
-
-    projectedBarContainer: {
-        marginTop: 14,
-        marginBottom: 16,
     },
 
     projectedBar: {
@@ -1080,7 +1049,6 @@ const styles = StyleSheet.create({
     projectedBarFill: {
         height: '100%',
         borderRadius: 8,
-        backgroundColor: '#FF4D65',
     },
 
     targetMarker: {
@@ -1097,50 +1065,15 @@ const styles = StyleSheet.create({
         gap: 10,
     },
 
-    projectedPresentBox: {
+    projectedBox: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#102B32',
         borderWidth: 1,
-        borderColor: '#075C51',
         borderRadius: 14,
         paddingVertical: 10,
     },
 
-    projectedAbsentBox: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#2B1C2D',
-        borderWidth: 1,
-        borderColor: '#63233E',
-        borderRadius: 14,
-        paddingVertical: 10,
-    },
-
-    projectedTotalBox: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#1B2638',
-        borderWidth: 1,
-        borderColor: '#344158',
-        borderRadius: 14,
-        paddingVertical: 10,
-    },
-
-    projectedNumberPresent: {
-        color: '#25D3A3',
-        fontSize: 16,
-        fontWeight: '800',
-    },
-
-    projectedNumberAbsent: {
-        color: '#FF6682',
-        fontSize: 16,
-        fontWeight: '800',
-    },
-
-    projectedNumberTotal: {
-        color: '#FFFFFF',
+    projectedNumberText: {
         fontSize: 16,
         fontWeight: '800',
     },
@@ -1151,124 +1084,5 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         marginTop: 3,
         letterSpacing: 0.3,
-    },
-
-
-    courseAttendance: {
-        flexDirection: 'row',
-        marginBottom: 10,
-        backgroundColor: 'gray',
-        padding: 20,
-        borderRadius: 8,
-    },
-    attendanceDetails: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-
-
-    // Text Styles
-    title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'black',
-    },
-    subTitle: {
-        flexShrink: 1,
-        fontSize: 18,
-        color: 'gray',
-    },
-    percentText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'black',
-        textAlign: 'center',
-    },
-    countText: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: 'black',
-        textAlign: 'center',
-    },
-
-
-    present: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    absent: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-
-
-
-
-    percentDetails: {
-        flex: 1,
-        backgroundColor: 'lightgray',
-        padding: 10,
-        borderRadius: 8,
-        justifyContent: 'space-between',
-    },
-
-    
-    percentCalculator: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
-    },
-    percentButton: {
-        backgroundColor: 'lightgray',
-        padding: 5,
-        marginHorizontal: 5,
-    },
-
-
-    button: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'white',
-        borderRadius: 70,
-    },
-    subtractButton: {
-        backgroundColor: 'gray',
-        paddingHorizontal: 16,
-        paddingVertical: 8,     
-    },
-    addButton: {
-        paddingHorizontal: 15,
-        paddingVertical: 8,
-    },
-
-
-
-    result: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    card: {
-        backgroundColor: 'gray',
-        padding: 20,
-        borderRadius: 8,
-    },
-    predictClasses: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: 'lightgray',
-        padding: 10,
-        borderRadius: 8,
-    },
-
-
-    // Sliders
-    resultSlider: {
-        backgroundColor: 'lightgreen',
-        borderRadius: 50,
-        padding: 6,
-        marginVertical: 10,
     },
 })

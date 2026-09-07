@@ -2,6 +2,7 @@ import { StyleSheet, ScrollView, Text, TouchableOpacity, View } from 'react-nati
 import { useState } from 'react'
 import * as Haptics from 'expo-haptics';
 import Slider from '@react-native-community/slider';
+import Svg, { Circle } from 'react-native-svg';
 
 type DetailsProps = {
     courseCode: string,
@@ -21,6 +22,13 @@ export default function Details({
     const [presentCount, setPresentCount] = useState(0);
     const [absentCount, setAbsentCount] = useState(0);
     const [targetAttendance, setTargetAttendance] = useState(70);
+
+    const attendanceRatio = present + absent === 0 ? 0 : present / (present + absent);
+    const attendancePercentage = Math.round(attendanceRatio * 100);
+
+    const circumference = 2 * Math.PI * 40;
+    const greenLength = circumference * attendanceRatio;
+    const redLength = circumference * (1 - attendanceRatio);
 
   return (
     <ScrollView
@@ -103,28 +111,67 @@ export default function Details({
 
             {/* Attendance */}
             <View style={styles.attendanceCard}>
+                <Text style={styles.targetTitle}>Current Attendance</Text>
+                <View style={styles.ratioSection} />
 
                 {/* Top section */}
-                <View style={styles.attendanceTop}>
+                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                    {/* Percentage Circle */}
+                    <View style={styles.attendanceCircleWrapper}>
+                        {
+                        present + absent === 0 ? (
+                            <Svg width={94} height={94}>
+                                <Circle
+                                    cx="47" cy="47" r={40}
+                                    stroke="#3A4354"
+                                    strokeWidth="7"
+                                    fill="none"
+                                />
+                            </Svg>
+                        ) : (
+                            <Svg
+                                width={94}
+                                height={94}
+                                viewBox="0 0 94 94"
+                                style={{ transform: [{ rotate: '-90deg' }] }}
+                            >
+                                {/* Green = Present */}
+                                <Circle
+                                    cx="47" cy="47" r={40}
+                                    stroke="#14C99A"
+                                    strokeWidth="7"
+                                    fill="none"
+                                    strokeDasharray={`${greenLength} ${circumference}`}
+                                    strokeDashoffset="0"
+                                    strokeLinecap="butt"
+                                />
 
-                    {/* Circular percentage */}
-                    <View style={styles.attendanceCircle}>
+                                {/* Red = Absent */}
+                                {attendanceRatio < 1 && (
+                                    <Circle
+                                        cx="47" cy="47" r={40}
+                                        stroke="#FF4668"
+                                        strokeWidth="7"
+                                        fill="none"
+                                        strokeDasharray={`${redLength} ${circumference}`}
+                                        strokeDashoffset={-greenLength}
+                                        strokeLinecap="butt"
+                                    />
+                                )}
+                            </Svg>
+                        )}
+
                         <View style={styles.attendanceCircleInner}>
                             <Text style={styles.attendancePercentage}>
-                                {
-                                    present + absent === 0? 0: Math.round((present / (present + absent)) * 100)
-                                }%
+                                {attendancePercentage}%
                             </Text>
-
-                            <Text style={styles.currentText}>CURRENT</Text>
                         </View>
                     </View>
 
 
                     {/* Total classes */}
-                    <View style={styles.totalClassesContainer}>
+                    {/* <View style={styles.totalClassesContainer}>
                         <Text style={styles.totalLabel}>TOTAL</Text>
-
                         <Text style={styles.totalLabel}>CLASSES</Text>
 
                         <View style={styles.totalNumberRow}>
@@ -133,14 +180,13 @@ export default function Details({
                         </View>
 
                         <Text style={styles.minimumText}>Min. required:</Text>
-
                         <Text style={styles.minimumPercentage}>75%</Text>
 
-                    </View>
+                    </View> */}
 
 
                     {/* Present / Absent */}
-                    <View style={styles.attendanceStats}>
+                    <View style={{flex:0.5, gap:10, flexShrink:1}}>
                         {/* Present */}
                         <View style={styles.statPresent}>
                             <View style={styles.statDotPresent} />
@@ -165,30 +211,20 @@ export default function Details({
                         <Text style={styles.ratioNumbers}>{present} P / {absent} A</Text>
                     </View>
 
-
                     <View style={styles.ratioBar}>
-                        <View style={[styles.ratioPresent,{flex:present + absent === 0? 0: present}]} />
-                        <View style={[styles.ratioAbsent,{flex:present + absent === 0? 0: absent}]} />
+                        <View style={[styles.ratioPresent,{flex:present + absent === 0 ? 0: present}]} />
+                        <View style={[styles.ratioAbsent,{flex:present + absent === 0 ? 0: absent}]} />
                     </View>
-
                 </View>
-
             </View>
 
-            <View style={styles.divider} />
+            <View style={styles.sectionSpacing} />
 
             {/* Target Attendance */}
-
             <View style={styles.targetCard}>
-
-                <View style={styles.targetHeader}>
-                    <Text style={styles.targetTitle}>
-                        Target Attendance
-                    </Text>
-
-                    <Text style={styles.targetValue}>
-                        {targetAttendance}%
-                    </Text>
+                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                    <Text style={styles.targetTitle}>Target Attendance</Text>
+                    <Text style={styles.targetValue}>{targetAttendance}%</Text>
                 </View>
 
                 <Slider
@@ -204,26 +240,14 @@ export default function Details({
                 />
 
                 <View style={styles.targetScale}>
-                    <Text style={styles.targetScaleText}>
-                        50%
-                    </Text>
-
-                    <Text style={styles.targetScaleText}>
-                        75% (College Req)
-                    </Text>
-
-                    <Text style={styles.targetScaleText}>
-                        100%
-                    </Text>
+                    <Text style={styles.targetScaleText}>50%</Text>
+                    <Text style={styles.targetScaleText}>75% (College Req)</Text>
+                    <Text style={styles.targetScaleText}>100%</Text>
                 </View>
 
             </View>
 
-            <View style={styles.sectionDivider} />
-            
-
-            <View style={styles.divider} />
-
+            <View style={styles.sectionSpacing} />
 
             {/* Attendance Simulator */}
             <View style={styles.simulatorHeader}>
@@ -316,8 +340,7 @@ export default function Details({
             </View>
 
 
-            <View style={styles.divider} />
-
+            <View style={styles.sectionSpacing} />
 
 
             {/* Projected Attendance */}
@@ -631,16 +654,27 @@ const styles = StyleSheet.create({
     attendanceCircle: {
         width: 94,
         height: 94,
-        borderRadius: 47,
-        borderWidth: 9,
-        borderColor: '#14C99A',
+        borderRadius: 50,
+        borderWidth: 7,
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: 14,
+        // marginRight: 14,
+        flexShrink: 0,
+    },
+
+    attendanceCircleWrapper: {
+        width: 94,
+        height: 94,
+        alignItems: 'center',
+        justifyContent: 'center',
         flexShrink: 0,
     },
 
     attendanceCircleInner: {
+        position: 'absolute',
+        width: 80,
+        height: 80,
+        borderRadius: 40,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -700,12 +734,6 @@ const styles = StyleSheet.create({
         fontWeight: '800',
     },
 
-    attendanceStats: {
-        width: 116,
-        gap: 10,
-        flexShrink: 1,
-    },
-
     statPresent: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -713,9 +741,7 @@ const styles = StyleSheet.create({
         borderColor: '#075B50',
         backgroundColor: '#102B2D',
         borderRadius: 20,
-        paddingVertical: 8,
-        paddingHorizontal: 9,
-        width: '100%',
+        padding: 8,
     },
 
     statAbsent: {
@@ -725,9 +751,7 @@ const styles = StyleSheet.create({
         borderColor: '#61253F',
         backgroundColor: '#281B2B',
         borderRadius: 20,
-        paddingVertical: 8,
-        paddingHorizontal: 9,
-        width: '100%',
+        padding: 8,
     },
 
     statDotPresent: {
@@ -764,19 +788,21 @@ const styles = StyleSheet.create({
         color: '#36D6A5',
         fontSize: 14,
         fontWeight: '800',
+        marginRight: 4,
     },
 
     statNumberAbsent: {
         color: '#FF6682',
         fontSize: 14,
         fontWeight: '800',
+        marginRight: 4,
     },
 
     ratioSection: {
         borderTopWidth: 1,
         borderTopColor: '#263147',
-        marginTop: 20,
-        paddingTop: 17,
+        marginTop: 10,
+        paddingTop: 8,
     },
 
     ratioHeader: {
@@ -822,12 +848,6 @@ const styles = StyleSheet.create({
         borderColor: '#2B374B',
         paddingHorizontal: 20,
         paddingVertical: 18,
-    },
-
-    targetHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
     },
 
     targetTitle: {
@@ -1134,12 +1154,6 @@ const styles = StyleSheet.create({
     },
 
 
-
-    divider: {
-        height: 1,
-        backgroundColor: 'lightgray',
-        marginVertical: 10,
-    },
     courseAttendance: {
         flexDirection: 'row',
         marginBottom: 10,

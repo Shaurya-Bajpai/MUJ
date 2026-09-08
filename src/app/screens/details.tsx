@@ -12,7 +12,7 @@ type DetailsProps = {
     absent: number
 }
 
-export default function Details({
+export default function DetailScreen({
     courseCode,
     courseName,
     present,

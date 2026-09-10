@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/build/MaterialIcons'
 import AttendanceScreen from './screens/attendance';
+import TimeTableScreen from './screens/timetable';
 
 type HomeProps = {
   firstName: string;
@@ -31,7 +32,8 @@ export default function HomeScreen({ firstName }: HomeProps) {
       }} />
 
 
-      <AttendanceScreen firstName="John" />
+      {/* <AttendanceScreen firstName="John" /> */}
+      <TimeTableScreen />
 
       {/* Bottom navigation */}
       <View style={styles.nav}>

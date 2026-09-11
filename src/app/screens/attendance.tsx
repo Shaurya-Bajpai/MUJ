@@ -3,17 +3,22 @@ import React, { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
-type HomeProps = {
-  firstName: string;
+type AttendanceProps = {
+  onCoursePress: (course: {
+    id: string;
+    title: string;
+    present: number;
+    total: number;
+  }) => void;
 };
 
 const courses = [
-  { id: 1, title: 'MANAGERIAL ECONOMICS', present: 14, total: 14 },
-  { id: 2, title: 'MARKETING MANAGEMENT', present: 16, total: 16 },
-  { id: 3, title: 'FINANCIAL ACCOUNTING', present: 12, total: 12 },
-  { id: 4, title: 'ORGANIZATIONAL BEHAVIOUR', present: 9, total: 20 },
-  { id: 5, title: 'DATA ANALYSIS IN EXCEL', present: 10, total: 10 },
-  { id: 6, title: 'PYTHON FOR DATA ANALYTICS', present: 17, total: 23 },
+  { id: "MBB6102", title: 'MANAGERIAL ECONOMICS', present: 4, total: 9 },
+  { id: "MBA6109", title: 'MARKETING MANAGEMENT', present: 6, total: 8 },
+  { id: "MBA6113", title: 'FINANCIAL ACCOUNTING', present: 4, total: 7 },
+  { id: "MBA6115", title: 'ORGANIZATIONAL BEHAVIOUR', present: 7, total: 10 },
+  { id: "MBB6108", title: 'DATA ANALYSIS IN EXCEL', present: 10, total: 10 },
+  { id: "MBB6107", title: 'PYTHON FOR DATA ANALYTICS', present: 1, total: 2 },
 ];
 
 const getColor = (percentage: number) =>
@@ -23,7 +28,7 @@ const getColor = (percentage: number) =>
     ? '#ffc52f'
     : '#ff4f6d';
 
-export default function AttendaceScreen({ firstName }: HomeProps) {
+export default function AttendaceScreen({ onCoursePress }: AttendanceProps) {
   const [filter, setFilter] = useState('All');
 
   // Overall attendance
@@ -57,7 +62,7 @@ export default function AttendaceScreen({ firstName }: HomeProps) {
       
       <FlatList
         data={filtered}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
         contentContainerStyle={styles.list}
 
         ListHeaderComponent={
@@ -113,6 +118,7 @@ export default function AttendaceScreen({ firstName }: HomeProps) {
 
           return (
             <Pressable
+              onPress={() => { onCoursePress(item) }}
               style={[
                 styles.card,
                 percentage < 50 && styles.risk,

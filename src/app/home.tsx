@@ -1,14 +1,31 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/build/MaterialIcons'
 import AttendanceScreen from './screens/attendance';
 import TimeTableScreen from './screens/timetable';
 import ResultScreen from './screens/result';
+import DetailScreen from './screens/details';
+import { useState } from 'react';
 
 type HomeProps = {
   firstName: string;
 };
 
 export default function HomeScreen({ firstName }: HomeProps) {
+  const [activeTab, setActiveTab] = useState('home');
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  
+  if (activeTab === 'detail' && selectedCourse) {
+    return (
+      <DetailScreen
+        courseCode={selectedCourse.id}
+        courseName={selectedCourse.title}
+        present={selectedCourse.present}
+        absent={selectedCourse.total - selectedCourse.present}
+        onBack={() => setActiveTab('home')}
+      />
+    );
+  }
+  
   return (
     <View style={styles.container}>
 
@@ -32,42 +49,67 @@ export default function HomeScreen({ firstName }: HomeProps) {
           marginTop: 6,
       }} />
 
+      {activeTab === 'home' && (
+        <AttendanceScreen
+          onCoursePress={(course) => {
+            setSelectedCourse(course);
+            setActiveTab('detail');
+          }}
+        />
+      )}
 
-      {/* <AttendanceScreen firstName="John" /> */}
-      {/* <TimeTableScreen /> */}
-      <ResultScreen />
+      {activeTab === 'timetable' && <TimeTableScreen />}
+
+      {activeTab === 'analytics' && <ResultScreen />}
 
       {/* Bottom navigation */}
       <View style={styles.nav}>
-        <Text style={styles.navActive}>
-          <MaterialIcons name="home" size={20} color="#45e5ad" />
-          {'\n'}Home
-        </Text>
+        <Pressable
+          style={styles.navItem}
+          onPress={() => setActiveTab('home')}
+        >
+          <MaterialIcons name="home" size={20} color={activeTab === 'home' ? '#45e5ad' : '#9ca8bb'} />
+          <Text style={[styles.navText, activeTab === 'home' && styles.navActive]}>Home</Text>
+        </Pressable>
 
-        <Text style={styles.navText}>
-          <MaterialIcons name="calendar-today" size={20} color="#9ca8bb" />
-          {'\n'}Timetable
-        </Text>
+        <Pressable
+          style={styles.navItem}
+          onPress={() => setActiveTab('timetable')}
+        >
+          <MaterialIcons name="calendar-today" size={20} color={activeTab === 'timetable' ? '#45e5ad' : '#9ca8bb'} />
+          <Text style={[styles.navText, activeTab === 'timetable' && styles.navActive]}>Timetable</Text>
+        </Pressable>
 
-        <Text style={styles.navText}>
-          <MaterialIcons name="bar-chart" size={20} color="#9ca8bb" />
-          {'\n'}Analytics
-        </Text>
+        <Pressable
+          style={styles.navItem}
+          onPress={() => setActiveTab('analytics')}
+        >
+          <MaterialIcons name="bar-chart" size={20} color={activeTab === 'analytics' ? '#45e5ad' : '#9ca8bb'} />
+          <Text style={[styles.navText, activeTab === 'analytics' && styles.navActive]}>Analytics</Text>
+        </Pressable>
 
-        <Text style={styles.navText}>
-          <MaterialIcons name="person" size={20} color="#9ca8bb" />
-          {'\n'}Profile
-        </Text>
+        <Pressable
+          style={styles.navItem}
+          onPress={() => setActiveTab('profile')}
+        >
+          <MaterialIcons name="person" size={20} color={activeTab === 'profile' ? '#45e5ad' : '#9ca8bb'} />
+          <Text style={[styles.navText, activeTab === 'profile' && styles.navActive]}>Profile</Text>
+        </Pressable>
       </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#080e18',
-    },
+  container: {
+      flex: 1,
+      backgroundColor: '#080e18',
+  },
+  navItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 70,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -107,11 +149,13 @@ const styles = StyleSheet.create({
     color: '#596476',
     textAlign: 'center',
     fontSize: 11,
+    fontWeight: '600',
   },
 
   navActive: {
     color: '#45e5ad',
     textAlign: 'center',
-    fontSize: 11,
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 })

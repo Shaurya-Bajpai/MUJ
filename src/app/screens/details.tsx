@@ -9,14 +9,16 @@ type DetailsProps = {
     courseCode: string,
     courseName: string,
     present: number,
-    absent: number
+    absent: number,
+    onBack: () => void,
 }
 
 export default function DetailScreen({
     courseCode,
     courseName,
     present,
-    absent
+    absent,
+    onBack
 }: DetailsProps) {
 
     const [isPreditionMode, setIsPredictionMode] = useState(false);
@@ -101,7 +103,7 @@ export default function DetailScreen({
         <View style={{flex:1, padding:20}}>
             {/* Header */}
             <View style={styles.header}>
-                <TouchableOpacity style={styles.headerButton}>]
+                <TouchableOpacity onPress={onBack} style={styles.headerButton}>
                     <MaterialIcons name="keyboard-arrow-left" size={28} color="#D8E0EA" />
                 </TouchableOpacity>
 
@@ -339,7 +341,7 @@ export default function DetailScreen({
 
                     <View style={styles.targetScale}>
                         <Text style={styles.targetScaleText}>45%</Text>
-                        <Text style={styles.targetScaleText}>75% (College Req)</Text>
+                        <Text style={styles.targetScaleText}>70% (College Req)</Text>
                         <Text style={styles.targetScaleText}>95%</Text>
                     </View>
 

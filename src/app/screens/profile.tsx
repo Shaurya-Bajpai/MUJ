@@ -11,6 +11,52 @@ type ProfileProps = {
   semester: string;
 }
 
+type CardItemProps = {
+    icon: React.ComponentProps<typeof MaterialIcons>['name'];
+    iconColor: string;
+    iconBackgroundColor: string;
+    title: string;
+    subtitle: string;
+    isValue: boolean;
+    onToggle: (value: boolean) => void;
+    trackColor: string;
+    thumbColor: string;
+}
+
+function CardItem({
+    icon,
+    iconColor,
+    iconBackgroundColor,
+    title,
+    subtitle,
+    isValue,
+    onToggle,
+    trackColor,
+    thumbColor
+}: CardItemProps) {
+    return (
+        <View style={styles.rowContainer}>
+            {/* Icon for App Updates */}
+            <MaterialIcons name={icon} size={30} style={[styles.icon, { color: iconColor, backgroundColor: iconBackgroundColor }]}/>
+
+            {/* Description for App Updates */}
+            <View style={{ flex: 1, flexShrink: 1, marginRight: 4 }}>
+                <Text style={[styles.profileDetailsText, { fontSize: 16, color: 'white' }]}>{title}</Text>
+                <Text style={styles.notificationDetailsText}>{subtitle}</Text>
+            </View>
+
+                {/* Switch for App Updates */}
+            <Switch
+                style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
+                onValueChange={() => onToggle(!isValue)}
+                value={isValue}
+                trackColor={{ false: "#767580", true: trackColor }}
+                thumbColor={isValue ? thumbColor : "#f4f3f4"}
+            />
+        </View>
+    )
+}
+
 export default function ProfileScreen({
     name,
     rollNo,
@@ -22,14 +68,17 @@ export default function ProfileScreen({
     const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
     const [isNextClassEnabled, setIsNextClassEnabled] = useState(false);
     const [isLostEnabled, setIsLostEnabled] = useState(false);
+    const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+    const [isVibrationEnabled, setIsVibrationEnabled] = useState(false);
+    const [isHapticsEnabled, setIsHapticsEnabled] = useState(false);
     
     return (
         <View style={styles.container}>
-            <ScrollView>
+            <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
                 {/* Profile Information */}
                 <View style={styles.profileContainer}>
                     <Text style={styles.profileNameText}>{name}</Text>
-                    <View style={styles.sectionDivider} />
+                    <View style={[styles.sectionDivider, { marginBottom: 12 }]} />
                     <Text style={styles.profileDetailsText}>Roll No: {rollNo}</Text>
                     <Text style={styles.profileDetailsText}>Mobile: {mobile}</Text>
                     <Text style={styles.profileDetailsText}>Email: {email}</Text>
@@ -38,85 +87,117 @@ export default function ProfileScreen({
                 </View>
 
                 {/* Notifications */}
-                <View style={styles.notificationContainer}>
+                <View style={styles.cardContainer}>
                     {/* Notification Header */}
                     {/* <View style={styles.notificationHeader}>
                         <MaterialIcons name="notifications" size={16} color="gray" />
                         <Text style={[styles.profileDetailsText, { color: 'gray' }]}>Notifications Types</Text>
                     </View> */}
-                    <View style={styles.notificationSectionHeader}>
+                    <View style={styles.sectionHeader}>
                         <View style={styles.sectionDivider} />
                         <Text style={styles.sectionTitle}>Notifications</Text>
                         <View style={styles.sectionDivider} />
                     </View>
 
-                    <View style={styles.notificationContentContainer}>
+                    <View style={styles.contentContainer}>
                         {/* App Updates */}
-                        <View style={styles.rowContainer}>
-                            {/* Icon for App Updates */}
-                            <MaterialIcons style={[styles.icon, { color: '#30c287', backgroundColor: '#0e3524' }]} name="notifications-active" size={30}/>
-
-                            {/* Description for App Updates */}
-                            <View style={{ flex: 1, flexShrink: 1, marginRight: 4 }}>
-                               <Text style={[styles.profileDetailsText, { fontSize: 16, color: 'white' }]}>App Updates</Text>
-                               <Text style={styles.notificationDetailsText}>Get the latest updates of the app</Text>
-                            </View>
-
-                             {/* Switch for App Updates */}
-                            <Switch
-                                style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
-                                onValueChange={() => setIsUpdateEnabled(prevState => !prevState)}
-                                value={isUpdateEnabled}
-                                trackColor={{ false: "#767580", true: "#134b34" }}
-                                thumbColor={isUpdateEnabled ? "#30c287" : "#f4f3f4"}
-                            />
-                        </View>
+                        <CardItem
+                            icon="notifications-active"
+                            iconColor="#30c287"
+                            iconBackgroundColor="#0e3524"
+                            title="App Updates"
+                            subtitle="Get the latest updates of the app"
+                            isValue={isUpdateEnabled}
+                            onToggle={setIsUpdateEnabled}
+                            trackColor="#134b34"
+                            thumbColor="#30c287"
+                        />
 
                         <View style={styles.divider} />
 
                         {/* Push Notifications regarding the next classes */}
-                        <View style={styles.rowContainer}>
-                            {/* Icon for App Updates */}
-                            <MaterialIcons style={[styles.icon, { color: '#564dfb', backgroundColor: '#232167' }]} name="school" size={30}/>
-
-                            {/* Description for App Updates */}
-                            <View style={{ flex: 1, flexShrink: 1, marginRight: 4 }}>
-                               <Text style={[styles.profileDetailsText, { fontSize: 16, color: 'white' }]}>Next Class</Text>
-                               <Text style={styles.notificationDetailsText}>Get notified about the next classes</Text>
-                            </View>
-
-                             {/* Switch for App Updates */}
-                            <Switch
-                                style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
-                                onValueChange={() => setIsNextClassEnabled(prevState => !prevState)}
-                                value={isNextClassEnabled}
-                                trackColor={{ false: "#767580", true: "#322f91" }}
-                                thumbColor={isNextClassEnabled ? "#564dfb" : "#f4f3f4"}
-                            />
-                        </View>
+                        <CardItem
+                            icon="school"
+                            iconColor="#37cadd"
+                            iconBackgroundColor="#0c4148"
+                            title="Next Class"
+                            subtitle="Get notified about the next classes"
+                            isValue={isNextClassEnabled}
+                            onToggle={setIsNextClassEnabled}
+                            trackColor="#0c4148"
+                            thumbColor="#37cadd"
+                        />
 
                         <View style={styles.divider} />
 
                         {/* Lost & Found */}
-                        <View style={styles.rowContainer}>
-                            {/* Icon for App Updates */}
-                            <MaterialIcons style={[styles.icon, { color: '#3b8af2', backgroundColor: '#112b4c' }]} name="search" size={30}/>
+                        <CardItem
+                            icon="search"
+                            iconColor="#f23b3b"
+                            iconBackgroundColor="#571515"
+                            title="Lost & Found"
+                            subtitle="Alert about lost and found items in campus"
+                            isValue={isLostEnabled}
+                            onToggle={setIsLostEnabled}
+                            trackColor="#601616"
+                            thumbColor="#f23b3b"
+                        />
+                    </View>
+                </View>
 
-                            {/* Description for App Updates */}
-                            <View style={{ flex: 1, flexShrink: 1, marginRight: 4 }}>
-                               <Text style={[styles.profileDetailsText, { fontSize: 16, color: 'white' }]}>Lost & Found</Text>
-                               <Text style={styles.notificationDetailsText}>Alert about lost and found items in campus</Text>
-                            </View>
+                {/* Sounds and Vibration */}
+                <View style={styles.cardContainer}>
+                    {/* Section Header */}
+                    <View style={styles.sectionHeader}>
+                        <View style={styles.sectionDivider} />
+                        <Text style={styles.sectionTitle}>Sounds & Vibration</Text>
+                        <View style={styles.sectionDivider} />
+                    </View>
+                    
+                    {/* Section Content */}
+                    <View style={styles.contentContainer}>
+                        {/* Sound */}
+                        <CardItem
+                            icon="volume-up"
+                            iconColor="#d3a021"
+                            iconBackgroundColor="#3d300e"
+                            title="Sound"
+                            subtitle="Play sound of notifications"
+                            isValue={isSoundEnabled}
+                            onToggle={setIsSoundEnabled}
+                            trackColor="#5d4917"
+                            thumbColor="#d3a021"
+                        />
 
-                             {/* Switch for App Updates */}
-                            <Switch
-                                style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
-                                onValueChange={() => setIsLostEnabled(prevState => !prevState)}
-                                value={isLostEnabled}
-                                trackColor={{ false: "#767580", true: "#1e477e" }}
-                                thumbColor={isLostEnabled ? "#3b8af2" : "#f4f3f4"}
-                            />
-                        </View>
+                        <View style={styles.divider} />
+
+                        {/* Vibration */}
+                        <CardItem
+                            icon="vibration"
+                            iconColor="#8c86ff"
+                            iconBackgroundColor="#22205e"
+                            title="Vibration"
+                            subtitle="Want Vibration on notifications"
+                            isValue={isVibrationEnabled}
+                            onToggle={setIsVibrationEnabled}
+                            trackColor="#322f91"
+                            thumbColor="#8c86ff"
+                        />
+
+                        <View style={styles.divider} />
+
+                        {/* haptics */}
+                        <CardItem
+                            icon="waving-hand"
+                            iconColor="#3b8af2"
+                            iconBackgroundColor="#112b4c"
+                            title="Haptics"
+                            subtitle="Haptic feedback on button press"
+                            isValue={isHapticsEnabled}
+                            onToggle={setIsHapticsEnabled}
+                            trackColor="#1e477e"
+                            thumbColor="#3b8af2"
+                        />
                     </View>
                 </View>
             </ScrollView>
@@ -148,9 +229,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 16,
         borderRadius: 12,
-        marginTop: 20,
+        marginTop: 14,
     },
-    notificationContainer: {
+    cardContainer: {
         flex: 1,
         borderRadius: 12,
         marginTop: 20,
@@ -161,7 +242,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         gap: 6,
     },
-    notificationContentContainer: {
+    contentContainer: {
         flex: 1,
         backgroundColor: '#101827',
         borderColor: '#364564',
@@ -174,7 +255,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 8,
     },
-    notificationSectionHeader: {
+    sectionHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

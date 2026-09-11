@@ -79,6 +79,10 @@ export default function HomeScreen({
       )}
 
       {/* Bottom navigation */}
+      <View style={{
+          height: 1,
+          backgroundColor: '#263147',
+      }} />
       <View style={styles.nav}>
         <Pressable
           style={styles.navItem}

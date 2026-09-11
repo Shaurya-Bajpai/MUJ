@@ -109,10 +109,10 @@ export default function AttendaceScreen({ onCoursePress }: AttendanceProps) {
           const redLength = circumference * (1 - ratio);
 
           // Classes that can be bunked while staying at 75%
-          const canBunk = percentage >= 75 ? Math.max(0, Math.floor(item.present / 0.75 - item.total)) : 0;
+          const canBunk = percentage >= 70 ? Math.max(0, Math.floor(item.present / 0.70 - item.total)) : 0;
 
           // Classes needed to reach 75%
-          const classesNeeded = percentage < 75 ? Math.ceil((0.75 * item.total - item.present) / 0.25) : 0;
+          const classesNeeded = percentage < 70 ? Math.ceil((0.70 * item.total - item.present) / 0.30) : 0;
 
           const color = getColor(percentage);
 
@@ -138,11 +138,11 @@ export default function AttendaceScreen({ onCoursePress }: AttendanceProps) {
                   {/* {item.present}/{item.total} Present */}
                   <Text style={{ color }}>
                     {'  •  '}
-                    {percentage >= 75
-                      ? percentage == 75 ? `Don't leave class` : `Can bunk ${canBunk}`
+                    {percentage >= 70
+                      ? percentage == 70 ? `Don't leave class` : `Can bunk ${canBunk}`
                       : `Attend next ${classesNeeded} class${
                           classesNeeded !== 1 ? 'es' : ''
-                        } for 75%`}
+                        } for 70%`}
                   </Text>
                 </Text>
 

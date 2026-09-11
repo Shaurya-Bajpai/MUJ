@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
 export default function ResultScreen() {
@@ -21,19 +21,19 @@ export default function ResultScreen() {
     const textColor = (value: number, type: string) => {
         if (type === 'GPA') {
             if (value >= 3) {
-                return '#19f3b9'
+                return '#39e6a0'
             } else if (value >= 2.4) {
                 return '#faa957'
             } else {
-                return '#FF4D65'
+                return '#ff4f6d'
             }
         } else if (type === 'CGPA') {
             if (value >= 8) {
-                return '#19f3b9'
+                return '#39e6a0'
             } else if (value >= 6) {
                 return '#faa957'
             } else {
-                return '#FF4D65'
+                return '#ff4f6d'
             }
         } else {
             return '#5de2f4'
@@ -84,96 +84,107 @@ export default function ResultScreen() {
         }
     }
 
-  return (
-    <View style={styles.container}>
+    return (
+        <View style={styles.container}>
+            <FlatList
+            data={result}
+            keyExtractor={(item) => item.id.toString()}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.listContent}
 
-        {/* Student Info */}
-        <View style={styles.studentInfoContainer}>
-            <View>
-                <Text style={[styles.studentInfoText, { fontSize: 16, color: 'lightgray', fontWeight: 'bold', marginBottom: 4 }]}>{studentInfo.Name}</Text>
-                <Text style={styles.studentInfoText}>Roll No: {studentInfo.RollNo}</Text>
-                <Text style={styles.studentInfoText}>{studentInfo.Branch}</Text>
-            </View>
-            <View style={styles.currentGPAContainer} >
-                <Text style={[styles.studentInfoText, { color: '#5de2f4', fontWeight: 'bold' }]}>Current GPA</Text>
-                <Text style={[styles.studentInfoText, { color: '#5de2f4', fontWeight: 'bold' }]}>{result[result.length - 1].GPA}</Text>
-            </View>
-        </View>
+            ListHeaderComponent={
+                <>
+                {/* Student Info */}
+                <View style={styles.studentInfoContainer}>
+                    <View style={{ flex: 1 }}>
+                        <Text style={[ styles.studentInfoText, { fontSize: 20, color: 'lightgray', fontWeight: 'bold', marginBottom: 4}]}>{studentInfo.Name}</Text>
+                        <Text style={styles.studentInfoText}>Roll No: {studentInfo.RollNo}</Text>
+                        <Text style={styles.studentInfoText}>{studentInfo.Branch}</Text>
+                    </View>
 
-        {/* Result */}
-        {/* <View style={{ flex: 1}}> */}
-            {
-                result.length > 1 ? (
-                    <View style={{ height: 200, marginBottom: 16 }}>
+                    <View style={styles.currentGPAContainer}>
+                        <Text style={[styles.studentInfoText, { color: '#5de2f4', fontWeight: 'bold'}]}> Current GPA</Text>
+                        <Text style={[styles.studentInfoText, { color: '#5de2f4', fontWeight: 'bold', fontSize: 20, }]}>{result[result.length - 1].GPA} </Text>
+                    </View>
+                </View>
+
+                {/* Result Statistics */}
+                {result.length > 1 && (
+                    <View style={styles.statsContainer}>
+                    {/* Row 1 */}
                         <View style={[styles.rowContainer, { gap: 12 }]}>
                             <View style={styles.resultItemContainer}>
-                                <Text style={[styles.resultHeadingText]}>Highest GPA</Text>
-                                <Text style={[styles.resultText, { color: textColor(highestGPA, 'GPA') }]}>{highestGPA}</Text>
+                                <Text style={styles.resultHeadingText}>Highest GPA</Text>
+                                <Text style={[styles.resultText,{color: textColor(highestGPA, 'GPA')}]}>{highestGPA}</Text>
                             </View>
                             <View style={styles.resultItemContainer}>
-                                <Text style={[styles.resultHeadingText]}>Lowest GPA</Text>
-                                <Text style={[styles.resultText, { color: textColor(lowestGPA, 'GPA') }]}>{lowestGPA}</Text>
+                                <Text style={styles.resultHeadingText}>Lowest GPA</Text>
+                                <Text style={[styles.resultText,{color: textColor(lowestGPA, 'GPA')}]}>{lowestGPA}</Text>
                             </View>
                         </View>
+
+                        {/* Row 2 */}
                         <View style={[styles.rowContainer, { gap: 12 }]}>
                             <View style={styles.resultItemContainer}>
-                                <Text style={[styles.resultHeadingText]}>Average CGPA</Text>
+                                <Text style={styles.resultHeadingText}>Average CGPA</Text>
                                 <Text style={[styles.resultText, { color: textColor(averageCGPA, 'CGPA') }]}>{averageCGPA}</Text>
                             </View>
                             <View style={styles.resultItemContainer}>
-                                <Text style={[styles.resultHeadingText]}>Total Credits</Text>
+                                <Text style={styles.resultHeadingText}>Total Credits</Text>
                                 <Text style={[styles.resultText, { color: textColor(totalCredits, 'Credits') }]}>{totalCredits}</Text>
                             </View>
                         </View>
                     </View>
-                ) : null
-            }
-        {/* </View> */}
-
-        {/* Semester Info */}
-        <View style={{ flex: 1}}>
-        <FlatList
-            data={result}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={{ paddingBottom: 20 }}
-            renderItem={({ item }) => {
-                return (
-                    <View style={[styles.resultItemContainer, styles.rowContainer]}>
-                        <View>
-                            <Text style={[styles.resultHeadingText, { fontSize: 22, marginBottom: 4, color: 'lightgray' }]}>Semester {item.semester}</Text>
-                            <Text style={[styles.resultHeadingText]}>Total Credits: {item.totalCredits}</Text>
-                        </View>
-                        <View style={{ justifyContent: 'center', gap: 2 }}>
-                            {/* Show GPA of semester */}
-                            <Text style={[
-                                styles.semesterResultText, 
-                                    { 
-                                        color: textColor(item.GPA, 'GPA'), 
-                                        backgroundColor: backgroundColor(item.GPA, 'GPA'), 
-                                        borderColor: borderColor(item.GPA, 'GPA') 
-                                    }
-                                ]
-                            }>GPA: {item.GPA}</Text>
-
-                            {/* Show CGPA of semester */}
-                            <Text style={[
-                                styles.semesterResultText, 
-                                    { 
-                                        color: textColor(item.CGPA, 'CGPA'), 
-                                        backgroundColor: backgroundColor(item.CGPA, 'CGPA'), 
-                                        borderColor: borderColor(item.CGPA, 'CGPA') 
-                                    }
-                                ]
-                            }>CGPA: {item.CGPA}</Text>
-                        </View>
-                    </View>
                 )}
-            }
-        />
-        </View>
 
-    </View>
-  )
+                {/* Semester Section Heading */}
+                <View style={styles.resultSectionContainer}>
+                    <View style={styles.sectionDivider} />
+                    <Text style={styles.sectionTitle}>Semester Results</Text>
+                    <View style={styles.sectionDivider} />
+                </View>
+                </>
+            }
+
+            renderItem={({ item }) => (
+                <View style={[styles.resultItemContainer,styles.semesterContainer]} >
+                {/* Left side */}
+                <View style={{ flex: 1 }}>
+                    <Text style={[styles.resultHeadingText, { fontSize: 22, marginBottom: 4, color: 'lightgray',}]}>Semester {item.semester}</Text>
+                    <Text style={styles.resultHeadingText}>Total Credits: {item.totalCredits}</Text>
+                </View>
+
+                {/* Right side */}
+                <View style={{justifyContent: 'center',gap: 6,}}>
+                    {/* GPA */}
+                    <Text style={[
+                        styles.semesterResultText,
+                        {
+                            color: textColor(item.GPA, 'GPA'),
+                            backgroundColor: backgroundColor(item.GPA,'GPA'),
+                            borderColor: borderColor(item.GPA,'GPA')
+                        }
+                    ]}
+                    > GPA: {item.GPA}
+                    </Text>
+
+                    {/* CGPA */}
+                    <Text style={[
+                        styles.semesterResultText,
+                        {
+                            color: textColor(item.CGPA, 'CGPA'),
+                            backgroundColor: backgroundColor(item.CGPA,'CGPA'),
+                            borderColor: borderColor(item.CGPA,'CGPA')
+                        }
+                    ]}
+                    > CGPA: {item.CGPA}
+                    </Text>
+                </View>
+                </View>
+            )}
+            />
+        </View>
+    )
 }
 
 
@@ -192,7 +203,8 @@ const styles = StyleSheet.create({
   studentInfoContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 20,
+    marginTop: 10,
+    marginBottom: 20,
     backgroundColor: '#172337',
     padding: 16,
     borderRadius: 12,
@@ -211,7 +223,18 @@ const styles = StyleSheet.create({
     color: '#70747c',
     fontSize: 14,
   },
-
+  sectionDivider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#364564'
+},
+  resultSectionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 16,
+  },
 
   resultItemContainer: {
     flex: 1,
@@ -243,4 +266,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+
+    listContent: {
+        paddingBottom: 20,
+    },
+
+    statsContainer: {
+        marginBottom: 4,
+    },
+
+    sectionTitle: {
+        color: '#9aa5b7',
+        fontSize: 14,
+        fontWeight: '700'
+    },
+
+    semesterContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    }
 })

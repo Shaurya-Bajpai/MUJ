@@ -5,12 +5,17 @@ import TimeTableScreen from './screens/timetable';
 import ResultScreen from './screens/result';
 import DetailScreen from './screens/details';
 import { useState } from 'react';
+import ProfileScreen from './screens/profile';
 
 type HomeProps = {
   firstName: string;
+  lastName?: string;
 };
 
-export default function HomeScreen({ firstName }: HomeProps) {
+export default function HomeScreen({ 
+    firstName,
+    lastName
+  }: HomeProps) {
   const [activeTab, setActiveTab] = useState('home');
   const [selectedCourse, setSelectedCourse] = useState<any>(null);
   
@@ -61,6 +66,17 @@ export default function HomeScreen({ firstName }: HomeProps) {
       {activeTab === 'timetable' && <TimeTableScreen />}
 
       {activeTab === 'analytics' && <ResultScreen />}
+
+      {activeTab === 'profile' && (
+        <ProfileScreen
+          name={firstName+ ' ' + lastName}
+          rollNo="123456"
+          mobile="9876543210"
+          email="shaurya.123456@muj.manipal.edu"
+          branch="Computer Science & Engineering"
+          semester="I"
+        />
+      )}
 
       {/* Bottom navigation */}
       <View style={styles.nav}>

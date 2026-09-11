@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
 export default function ResultScreen() {
@@ -15,18 +15,74 @@ export default function ResultScreen() {
     ]
     const highestGPA = Math.max(...result.map(item => item.GPA));
     const lowestGPA = Math.min(...result.map(item => item.GPA));
-    const averageCGPA = result.reduce((sum, item) => sum + item.CGPA, 0) / result.length;
+    const averageCGPA = Number((result.reduce((sum, item) => sum + item.CGPA, 0) / result.length).toFixed(1));
     const totalCredits = result.reduce((sum, item) => sum + item.totalCredits, 0);
 
-    const resultInfoHighestGpaColor = `${
-        highestGPA >= 3 ? '#19f3b9' : highestGPA >= 2 ? '#faa957' : '#FF4D65'
-    }`
-    const resultInfoLowestGpaColor = `${
-        lowestGPA >= 3 ? '#19f3b9' : lowestGPA >= 2 ? '#faa957' : '#FF4D65'
-    }`
-    const resultInfoAverageCgpaColor = `${
-        averageCGPA >= 3 ? '#19f3b9' : averageCGPA >= 2 ? '#faa957' : '#FF4D65'
-    }`
+    const textColor = (value: number, type: string) => {
+        if (type === 'GPA') {
+            if (value >= 3) {
+                return '#19f3b9'
+            } else if (value >= 2.4) {
+                return '#faa957'
+            } else {
+                return '#FF4D65'
+            }
+        } else if (type === 'CGPA') {
+            if (value >= 8) {
+                return '#19f3b9'
+            } else if (value >= 6) {
+                return '#faa957'
+            } else {
+                return '#FF4D65'
+            }
+        } else {
+            return '#5de2f4'
+        }
+    }
+
+    const backgroundColor = (value: number, type: string) => {
+        if (type === 'GPA') {
+            if (value >= 3) {
+                return '#07392c'
+            } else if (value >= 2.4) {
+                return '#4f341a'
+            } else {
+                return '#5b1c25'
+            }
+        } else if (type === 'CGPA') {
+            if (value >= 8) {
+                return '#07392c'
+            } else if (value >= 6) {
+                return '#4f341a'
+            } else {
+                return '#5b1c25'
+            }
+        } else {
+            return '#214d53'
+        }
+    }
+
+    const borderColor = (value: number, type: string) => {
+        if (type === 'GPA') {
+            if (value >= 3) {
+                return '#0d5b46'
+            } else if (value >= 2.4) {
+                return '#81542a'
+            } else {
+                return '#8c2d3b'
+            }
+        } else if (type === 'CGPA') {
+            if (value >= 8) {
+                return '#0d5b46'
+            } else if (value >= 6) {
+                return '#81542a'
+            } else {
+                return '#8c2d3b'
+            }
+        } else {
+            return '#214d53'
+        }
+    }
 
   return (
     <View style={styles.container}>
@@ -45,35 +101,77 @@ export default function ResultScreen() {
         </View>
 
         {/* Result */}
-        <View style={{ flex: 1 }}>
+        {/* <View style={{ flex: 1}}> */}
             {
                 result.length > 1 ? (
-                    // result.map(({ id, CGPA, GPA, semester }) => (
-                    <View>
-                        <View style={{flexDirection: 'row', gap: 12}}>
+                    <View style={{ height: 200, marginBottom: 16 }}>
+                        <View style={[styles.rowContainer, { gap: 12 }]}>
                             <View style={styles.resultItemContainer}>
                                 <Text style={[styles.resultHeadingText]}>Highest GPA</Text>
-                                <Text style={[styles.resultText, { color: resultInfoHighestGpaColor }]}>{highestGPA}</Text>
+                                <Text style={[styles.resultText, { color: textColor(highestGPA, 'GPA') }]}>{highestGPA}</Text>
                             </View>
                             <View style={styles.resultItemContainer}>
                                 <Text style={[styles.resultHeadingText]}>Lowest GPA</Text>
-                                <Text style={[styles.resultText, { color: resultInfoLowestGpaColor }]}>{lowestGPA}</Text>
+                                <Text style={[styles.resultText, { color: textColor(lowestGPA, 'GPA') }]}>{lowestGPA}</Text>
                             </View>
                         </View>
-                        <View style={{flexDirection: 'row', gap: 12}}>
+                        <View style={[styles.rowContainer, { gap: 12 }]}>
                             <View style={styles.resultItemContainer}>
                                 <Text style={[styles.resultHeadingText]}>Average CGPA</Text>
-                                <Text style={[styles.resultText, { color: resultInfoAverageCgpaColor }]}>{averageCGPA}</Text>
+                                <Text style={[styles.resultText, { color: textColor(averageCGPA, 'CGPA') }]}>{averageCGPA}</Text>
                             </View>
                             <View style={styles.resultItemContainer}>
                                 <Text style={[styles.resultHeadingText]}>Total Credits</Text>
-                                <Text style={[styles.resultText, { color: '#5de2f4' }]}>{totalCredits}</Text>
+                                <Text style={[styles.resultText, { color: textColor(totalCredits, 'Credits') }]}>{totalCredits}</Text>
                             </View>
                         </View>
                     </View>
                 ) : null
             }
+        {/* </View> */}
+
+        {/* Semester Info */}
+        <View style={{ flex: 1}}>
+        <FlatList
+            data={result}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ paddingBottom: 20 }}
+            renderItem={({ item }) => {
+                return (
+                    <View style={[styles.resultItemContainer, styles.rowContainer]}>
+                        <View>
+                            <Text style={[styles.resultHeadingText, { fontSize: 22, marginBottom: 4, color: 'lightgray' }]}>Semester {item.semester}</Text>
+                            <Text style={[styles.resultHeadingText]}>Total Credits: {item.totalCredits}</Text>
+                        </View>
+                        <View style={{ justifyContent: 'center', gap: 2 }}>
+                            {/* Show GPA of semester */}
+                            <Text style={[
+                                styles.semesterResultText, 
+                                    { 
+                                        color: textColor(item.GPA, 'GPA'), 
+                                        backgroundColor: backgroundColor(item.GPA, 'GPA'), 
+                                        borderColor: borderColor(item.GPA, 'GPA') 
+                                    }
+                                ]
+                            }>GPA: {item.GPA}</Text>
+
+                            {/* Show CGPA of semester */}
+                            <Text style={[
+                                styles.semesterResultText, 
+                                    { 
+                                        color: textColor(item.CGPA, 'CGPA'), 
+                                        backgroundColor: backgroundColor(item.CGPA, 'CGPA'), 
+                                        borderColor: borderColor(item.CGPA, 'CGPA') 
+                                    }
+                                ]
+                            }>CGPA: {item.CGPA}</Text>
+                        </View>
+                    </View>
+                )}
+            }
+        />
         </View>
+
     </View>
   )
 }
@@ -85,6 +183,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#080e18',
     paddingHorizontal: 16,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   studentInfoContainer: {
@@ -99,7 +201,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: '#08aabd',
+    backgroundColor: '#07383e',
+    borderColor: '#0f5b64',
     borderRadius: 12,
     padding: 12,
   },
@@ -108,7 +211,6 @@ const styles = StyleSheet.create({
     color: '#70747c',
     fontSize: 14,
   },
-
 
 
   resultItemContainer: {
@@ -129,5 +231,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 4,
     fontWeight: '600',
+  },
+
+  
+  semesterResultText: {
+    borderWidth: 1,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: 8,
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 })

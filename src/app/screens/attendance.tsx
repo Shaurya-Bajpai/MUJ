@@ -63,7 +63,7 @@ export default function AttendaceScreen({ onCoursePress }: AttendanceProps) {
       <FlatList
         data={filtered}
         keyExtractor={item => item.id}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={{ paddingBottom: 16, paddingHorizontal: 16 }}
 
         ListHeaderComponent={
           <>
@@ -216,14 +216,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#080e18',
   },
 
-  list: {
-    padding: 16,
-    paddingBottom: 20,
-  },
-
   filters: {
     flexDirection: 'row',
     gap: 10,
+    marginTop: 8,
     marginBottom: 14,
   },
 

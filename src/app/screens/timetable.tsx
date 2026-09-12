@@ -104,7 +104,7 @@ export default function TimeTableScreen() {
 
       {/* Classes */}
       <View style={{ flex: 1}}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ paddingVertical: 16 }}>
         {classes.map(({ id, subject, timeIn, timeOut, location }) => (
           <View key={id} style={styles.classContainer}>
             {/* Time details */}
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   sectionDivider: {
     height: 1,
     backgroundColor: '#263147',
-    marginBottom: 12,
+    // marginBottom: 12,
   },
 
   dayContainer: {

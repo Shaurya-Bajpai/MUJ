@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, ScrollView, Text, View, TouchableOpacity } from 'react-native'
 import { useState } from 'react'
 import * as Haptics from 'expo-haptics';
 import Slider from '@react-native-community/slider';
@@ -100,31 +100,25 @@ export default function DetailScreen({
   return (
     <View style={styles.container}>
 
-        <View style={{flex:1, padding:20}}>
-            {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={onBack} style={styles.headerButton}>
-                    <MaterialIcons name="keyboard-arrow-left" size={28} color="#D8E0EA" />
-                </TouchableOpacity>
+        {/* Header */}
+        <View style={styles.header}>
+            <TouchableOpacity onPress={() => onBack()}>
+                <MaterialIcons style={[styles.icon, { borderRadius: 12 }]} name="keyboard-arrow-left" size={25} color="#D8E0EA" />
+            </TouchableOpacity>
 
-                <View style={styles.headerCenter}>
-                    <View style={styles.courseCodePill}>
-                        <Text style={styles.courseCodeText}>{courseCode}</Text>
-                    </View>
-                </View>
+            <Text style={styles.courseCodeText}>{courseCode}</Text>
 
-                <TouchableOpacity 
-                    style={styles.headerButton}
-                    onPress={() => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-                        setIsPredictionMode(!isPreditionMode);
-                    }}
-                >
-                    <MaterialIcons name="calculate" size={28} color="lightgray" />
-                </TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                setIsPredictionMode(!isPreditionMode);
+            }}>
+                <MaterialIcons style={styles.icon} name="calculate" size={22} color="#62dcf5" />
+            </TouchableOpacity>
+        </View>
 
-            </View>
+        <View style={{ height: 1, backgroundColor: '#263147', marginTop: 6 }} />
 
+        <View style={{flex:1, paddingHorizontal:16}}>
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
@@ -497,52 +491,43 @@ const styles = StyleSheet.create({
 
     scrollContent: {
         backgroundColor: '#07101F',
+        paddingTop: 12,
         paddingBottom: 30,
     },
 
     container: {
         flex: 1,
         backgroundColor: '#07101F',
-        // marginTop: 20,
-        // marginHorizontal: 20,
+        paddingTop: 20,
     },
 
     // Header
     header: {
-        height: 60,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 10,
+        paddingHorizontal: 16,
+        paddingTop: 10,
+        paddingBottom: 6,
+        gap: 12,
     },
-
-    headerButton: {
-        width: 48,
-        height: 48,
-        borderRadius: 16,
-        backgroundColor: '#101A2B',
-        borderWidth: 1,
-        borderColor: '#1E2A3C',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    headerCenter: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
+  
+    icon: {
+        backgroundColor: '#172337',
+        padding: 11,
+        borderRadius: 25,
     },
 
     courseCodePill: {
+    },
+
+    courseCodeText: {
         paddingHorizontal: 15,
         paddingVertical: 7,
         borderRadius: 20,
         backgroundColor: '#0D1D2B',
         borderWidth: 1,
         borderColor: '#064F48',
-    },
-
-    courseCodeText: {
         color: '#22D3A3',
         fontSize: 14,
         fontWeight: '800',

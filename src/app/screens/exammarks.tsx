@@ -164,10 +164,11 @@ const styles = StyleSheet.create({
 
   // Header
   header: {
-    height: 60,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 6,
     gap: 12,
   },
 
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
   icon: {
     backgroundColor: '#172337',
     padding: 10,
-    borderRadius: 16,
+    borderRadius: 12,
   },
 
   dropdownButton: {

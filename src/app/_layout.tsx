@@ -17,7 +17,7 @@ export default function TabLayout() {
       <AnimatedSplashOverlay />
       {/* <AppTabs /> */}
       {/* <Login /> */}
-      <HomeScreen firstName="Shaurya" lastName="Bajpai" />
+      <HomeScreen firstName="Chotu" lastName="Don" />
     </ThemeProvider>
   );
 }

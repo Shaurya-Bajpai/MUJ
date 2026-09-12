@@ -1,5 +1,6 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/build/MaterialIcons'
+import * as Haptics from 'expo-haptics';
 import AttendanceScreen from './screens/attendance';
 import TimeTableScreen from './screens/timetable';
 import ResultScreen from './screens/result';
@@ -19,6 +20,11 @@ export default function HomeScreen({
   }: HomeProps) {
   const [activeTab, setActiveTab] = useState('home');
   const [selectedCourse, setSelectedCourse] = useState<any>(null);
+
+  const refreshData = () => {
+    // Implement your data refresh logic here
+    console.log('Refreshing data...');
+  }
   
   if (activeTab === 'detail' && selectedCourse) {
     return (
@@ -48,10 +54,15 @@ export default function HomeScreen({
       <View style={styles.header}>
           <Text style={styles.hello}>Hello, {firstName}</Text>
 
-          <Pressable onPress={() => setActiveTab('exammarks')}>
-            <MaterialIcons style={styles.icon} name="text-snippet" size={20} color="#62dcf5" />
-          </Pressable>
-          <MaterialIcons style={styles.icon} name="refresh" size={20} color="#62dcf5" />
+          <TouchableOpacity onPress={() => setActiveTab('exammarks')}>
+            <MaterialIcons style={styles.icon} name="text-snippet" size={22} color="#62dcf5" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+            refreshData()
+          }}>
+            <MaterialIcons style={styles.icon} name="refresh" size={22} color="#62dcf5" />
+          </TouchableOpacity>
       </View>
 
       <View style={{

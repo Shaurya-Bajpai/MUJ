@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function ResultScreen() {
     const studentInfo = {
-        Name: 'Shaurya Bajpai',
+        Name: 'Chotu Don',
         RollNo: '123456',
         Branch: 'Computer Science & Engineering',
     }

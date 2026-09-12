@@ -6,6 +6,7 @@ import ResultScreen from './screens/result';
 import DetailScreen from './screens/details';
 import { useState } from 'react';
 import ProfileScreen from './screens/profile';
+import ExammarksScreen from './screens/exammarks';
 
 type HomeProps = {
   firstName: string;
@@ -31,6 +32,14 @@ export default function HomeScreen({
     );
   }
   
+  if (activeTab === 'exammarks') {
+    return (
+      <ExammarksScreen
+        onBack={() => setActiveTab('home')}
+      />
+    );
+  }
+  
   return (
     <View style={styles.container}>
 
@@ -39,13 +48,10 @@ export default function HomeScreen({
       <View style={styles.header}>
           <Text style={styles.hello}>Hello, {firstName}</Text>
 
-        <Text style={styles.sem}>
-          <MaterialIcons
-            name="refresh"
-            size={20}
-            color="#62dcf5"
-          />
-        </Text>
+          <Pressable onPress={() => setActiveTab('exammarks')}>
+            <MaterialIcons style={styles.icon} name="text-snippet" size={20} color="#62dcf5" />
+          </Pressable>
+          <MaterialIcons style={styles.icon} name="refresh" size={20} color="#62dcf5" />
       </View>
 
       <View style={{
@@ -72,7 +78,7 @@ export default function HomeScreen({
           name={firstName+ ' ' + lastName}
           rollNo="123456"
           mobile="9876543210"
-          email="shaurya.123456@muj.manipal.edu"
+          email="chotu.123456@muj.manipal.edu"
           branch="Computer Science & Engineering"
           semester="I"
         />
@@ -132,14 +138,15 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 30,
     paddingBottom: 6,
+    gap: 8,
   },
 
   hello: {
+    flex: 1,
     color: '#9aa5b7',
     fontSize: 14,
     fontWeight: '700',
@@ -152,7 +159,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
 
-  sem: {
+  icon: {
     backgroundColor: '#172337',
     padding: 12,
     borderRadius: 25,
